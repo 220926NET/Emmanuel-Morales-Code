@@ -34,8 +34,7 @@ namespace projectOneApi_v1.Controllers
                 Console.WriteLine("user exists");
                 Response.Headers.Add("id", user.id.ToString());
                 return Ok();
-                
-                
+               
             } catch(Exception e)
             {
                 Console.WriteLine("user was not found");

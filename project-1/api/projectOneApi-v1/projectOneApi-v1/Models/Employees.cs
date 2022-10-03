@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace projectOneApi_v1.Models
 {
@@ -8,7 +9,8 @@ namespace projectOneApi_v1.Models
 
         public string? name { get; set; }
 
-        public List<Tickets>? tickets { get; set; }
+        public User user { get; set; }
+
 
 
     }
