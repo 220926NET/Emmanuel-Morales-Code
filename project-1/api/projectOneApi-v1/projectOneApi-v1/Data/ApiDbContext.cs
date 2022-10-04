@@ -11,7 +11,7 @@ namespace projectOneApi_v1.Data
 
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<Logins> Logins { get; set; }
 
         public DbSet<Employees> Employees { get; set; }
 

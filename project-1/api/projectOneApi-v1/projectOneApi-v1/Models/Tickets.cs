@@ -6,9 +6,11 @@
 
         public string Description { get; set; }
 
-        public string Status { get; set; }
+        public string Status { get; set; } = "Pending";
 
-        public Employees Employee { get; set; }
+        public int Amount { get; set; }
+
+        public int employeeId { get; set; }
 
 
     }

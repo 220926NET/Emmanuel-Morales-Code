@@ -22,15 +22,25 @@ namespace projectOneApi_v1.Controllers
 
         // POST api/<SignUpController>
         [HttpPost]
-        public void Post([FromBody]Employees employee)
+        public IActionResult Post([FromBody]Employees employee)
         {
-            Console.WriteLine(employee.user.userName);
-            Console.WriteLine(employee.name);
-            
-            Employees newEmployee = new Employees() { name = employee.name };
+            // TODO 
+            // check if user exists if so return error status code
+            bool containsLogin = _dbContext.Logins.Any(login => login.UserName == employee.Login.UserName);
+            if (containsLogin)
+            {
+                return BadRequest("user already exists");
+            }
 
+
+            Console.WriteLine(employee.Login.UserName);
+            Console.WriteLine(employee.Name);
+            
+            
             _dbContext.Employees.Add(employee);
             _dbContext.SaveChanges();
+
+            return Ok();
         }
 
 

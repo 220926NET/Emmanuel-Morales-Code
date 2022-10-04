@@ -5,13 +5,13 @@ namespace projectOneApi_v1.Models
 {
     public class Employees
     {
-        public int id { get; set; }
+        public int Id { get; set; }
 
-        public string? name { get; set; }
+        public string? Name { get; set; }
 
-        public User user { get; set; }
+        public Logins Login { get; set; }
 
-
+        public bool IsManager { get; set; } = false; 
 
     }
 }

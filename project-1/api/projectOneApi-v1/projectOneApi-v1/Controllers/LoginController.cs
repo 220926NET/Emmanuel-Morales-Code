@@ -20,19 +20,19 @@ namespace projectOneApi_v1.Controllers
 
         // POST api/<LoginController>
         [HttpPost]
-        public IActionResult Post([FromBody] User loginUser)
+        public IActionResult Post([FromBody] Logins loginUser)
         {
-            Console.WriteLine(loginUser.id);
-            Console.WriteLine(loginUser.userName);
-            Console.WriteLine(loginUser.password);
+            Console.WriteLine(loginUser.Id);
+            Console.WriteLine(loginUser.UserName);
+            Console.WriteLine(loginUser.Password);
 
-            List<string> test = new List<string>() { loginUser.userName, loginUser.password };
+            List<string> test = new List<string>() { loginUser.UserName, loginUser.Password };
 
             try
             {
-                User user = _dbContext.Users.Where(u => u.userName == loginUser.userName && u.password == loginUser.password).First();
+                Logins login = _dbContext.Logins.Where(login => login.UserName == loginUser.UserName && login.Password == loginUser.Password).First();
                 Console.WriteLine("user exists");
-                Response.Headers.Add("id", user.id.ToString());
+                Response.Headers.Add("id", login.Id.ToString());
                 return Ok();
                
             } catch(Exception e)

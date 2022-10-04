@@ -23,23 +23,47 @@ namespace projectOneApi_v1.Migrations
 
             modelBuilder.Entity("projectOneApi_v1.Models.Employees", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("name")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("IsManager")
+                        .HasColumnType("bit");
 
-                    b.Property<int>("userid")
+                    b.Property<int>("LoginId")
                         .HasColumnType("int");
 
-                    b.HasKey("id");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("userid");
+                    b.HasKey("Id");
+
+                    b.HasIndex("LoginId");
 
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("projectOneApi_v1.Models.Logins", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Logins");
                 });
 
             modelBuilder.Entity("projectOneApi_v1.Models.Tickets", b =>
@@ -50,65 +74,34 @@ namespace projectOneApi_v1.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Employeeid")
-                        .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.Property<int>("employeeId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("Employeeid");
+                    b.HasKey("Id");
 
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("projectOneApi_v1.Models.User", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"), 1L, 1);
-
-                    b.Property<string>("password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("userName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("projectOneApi_v1.Models.Employees", b =>
                 {
-                    b.HasOne("projectOneApi_v1.Models.User", "user")
+                    b.HasOne("projectOneApi_v1.Models.Logins", "Login")
                         .WithMany()
-                        .HasForeignKey("userid")
+                        .HasForeignKey("LoginId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("user");
-                });
-
-            modelBuilder.Entity("projectOneApi_v1.Models.Tickets", b =>
-                {
-                    b.HasOne("projectOneApi_v1.Models.Employees", "Employee")
-                        .WithMany()
-                        .HasForeignKey("Employeeid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
+                    b.Navigation("Login");
                 });
 #pragma warning restore 612, 618
         }
