@@ -18,7 +18,6 @@ namespace projectOneApi_v1.Controllers
             _dbContext = dbContext;
         }
 
-        // POST api/<LoginController>
         [HttpPost]
         public IActionResult Post([FromBody] Logins loginUser)
         {
@@ -26,28 +25,43 @@ namespace projectOneApi_v1.Controllers
             Console.WriteLine(loginUser.UserName);
             Console.WriteLine(loginUser.Password);
 
-            List<string> test = new List<string>() { loginUser.UserName, loginUser.Password };
-
             try
             {
                 Logins login = _dbContext.Logins.Where(login => login.UserName == loginUser.UserName && login.Password == loginUser.Password).First();
-                Console.WriteLine("user exists");
                 Response.Headers.Add("id", login.Id.ToString());
+
                 return Ok();
                
-            } catch(Exception e)
+            } catch(InvalidOperationException e)
             {
-                Console.WriteLine("user was not found");
-                return BadRequest("user not found");
+                return NotFound("user not found");
             }
-
-
-           
-            
          
         }
 
+        [HttpGet("{id}")]
 
-       
+        public IActionResult Get(int id)
+        {
+            
+            Employees? employee = _dbContext.Employees.Find(id);
+            
+            if(employee != null)
+            {
+                Console.WriteLine(employee.Name);
+                Console.WriteLine(employee.IsManager);
+                Console.WriteLine(employee.Id);
+                Console.WriteLine(employee.Login);
+              
+                return Ok(employee);
+            }
+
+
+            return BadRequest(); 
+
+        }
+
     }
+
+    
 }
