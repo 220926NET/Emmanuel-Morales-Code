@@ -1,8 +1,9 @@
 class User {
 
-    public string Name{get; set;}
+    public int Id {get; set;}
+    public string? Name{get; set;}
+    
+    public Login? login{get; set;}
 
-    public Login login{get; set;}
-
-    public bool IsManager{get;set;} = false; 
+    public bool IsManager{get;set;}
 }
