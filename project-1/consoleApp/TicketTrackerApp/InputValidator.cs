@@ -21,7 +21,7 @@ class InputValidator {
     public bool isValidOptionInput(string? input, int maxNumInput){
         int num;
         bool inputIsNum = int.TryParse(input, out num );
-        if(!inputIsNum || num > maxNumInput && num > 0){
+        if(!inputIsNum || num > maxNumInput || num < 0){
             return false; 
         }
         return true;

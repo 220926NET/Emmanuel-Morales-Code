@@ -113,7 +113,7 @@ while (!exit && !loggedIn)
             break;
 
         case 3:
-            Console.WriteLine("Goodbye!");
+            printMessage("GoodBye");
             exit = true;
             break;
     }
@@ -131,9 +131,7 @@ if (loggedIn)
     await form.setPendingTickets();
     //TODO fix set tickets by Id
     //Bug: awaiting causes newtwon parse error
-    
-    Console.WriteLine($"Hello {form.getUser().Name}. \n");
-    printWelcomeMessage(form.getUser().Name!);
+    printWelcomeMessage(form.getUser().Name!.ToUpper());
 }
 
 
@@ -158,113 +156,109 @@ while (loggedIn)
         string? userOption = Console.ReadLine();
         int? userOptionInt = isValidOptionInput(userOption, options);
 
-        if (userOptionInt == 1)
+        switch (userOptionInt)
         {
-            Console.WriteLine("Please type a description for your ticket.");
-            string? description = Console.ReadLine();
-            bool isValidDescription = inputValidator.isValidDescriptioon(description);
+            case 1:
+                Console.WriteLine("Please type a description for your ticket.");
+                string? description = Console.ReadLine();
+                bool isValidDescription = inputValidator.isValidDescriptioon(description);
 
-            Console.WriteLine("Please type an Amount.");
-            string? amountStr = Console.ReadLine();
-            bool isValidAmount = inputValidator.isValidAmount(amountStr);
-            int amount = 0;
+                Console.WriteLine("Please type an Amount.");
+                string? amountStr = Console.ReadLine();
+                bool isValidAmount = inputValidator.isValidAmount(amountStr);
+                int amount = 0;
 
-            if (isValidAmount)
-            {
-                amount = int.Parse(amountStr!);
-            }
-
-            if (!isValidAmount || !isValidDescription)
-            {
-                printErrorMessage("Please ensure Amount contains only numbers and Description contains characters!");
-            }
-            else
-            {
-                Ticket ticket = new Ticket(description!, amount!, form.getUserId());
-                bool postSuccess = form.postTicket(ticket) == 1 ? true : false;
-                if (!postSuccess)
+                if (isValidAmount)
                 {
-                    printErrorMessage("Error creating ticket, please try again later.");
+                    amount = int.Parse(amountStr!);
+                }
+
+                if (!isValidAmount || !isValidDescription)
+                {
+                    printErrorMessage("Please ensure Amount contains only numbers and Description contains characters!");
                 }
                 else
                 {
-                    printMessage("Succesfully created ticket.");
-                }
-            }
-
-
-        }
-
-        if (userOptionInt == 2) loggedIn = false;
-
-        if (userOptionInt == 3)
-        {
-            await form.setTicketsById();
-            if (form.getSubmittedTickets() != null)
-            {
-                foreach (Ticket ticket in form.getSubmittedTickets())
-                {
-                    printMessage(ticket.ToString());
-                }
-            }
-            else
-            {
-
-                printMessage("You currently have no tickets.");
-            }
-
-        }
-
-        if (userOptionInt == 4)
-        {
-            bool isViewingTickets = true;
-            while (isViewingTickets)
-            {
-                foreach (Ticket ticket in form.getPendingTicket())
-                {   
-                    printTicket(ticket);
-                  
-                }
-
-                Console.WriteLine("Please enter the id followed by \"approve\" or \"deny\" to approve or deny a reimbursment ticket.");
-                Console.WriteLine("Enter x to leave. \n ");
-
-                string? managerInput = Console.ReadLine();
-
-                if (managerInput == "x")
-                {
-                    isViewingTickets = false;
-                }
-                else
-                {
-                    //TODO implement validation for choosing tickets 
-                    int? employeeTicketId = null;
-                    string? managerDecision = null;
-                    bool mgrInputIsValid = inputValidator.isValidManagerChoice(managerInput);
-
-                    if (mgrInputIsValid)
+                    Ticket ticket = new Ticket(description!, amount!, form.getUserId());
+                    bool postSuccess = form.postTicket(ticket) == 1 ? true : false;
+                    if (!postSuccess)
                     {
-                        managerDecision = managerInput!.Substring(managerInput.IndexOf(" ") + 1).ToLower();
-                        string employeeIdStr = managerInput.Substring(0, managerInput.IndexOf(" ")).ToLower();
-                        employeeTicketId = int.Parse(employeeIdStr);
+                        printErrorMessage("Error creating ticket, please try again later.");
+                    }
+                    else
+                    {
+                        printMessage("Succesfully created ticket.");
+                    }
+                }
+                break;
+            case 2:
+                loggedIn = false;
+                break;
+            case 3:
+                await form.setTicketsById();
+                if (form.getSubmittedTickets() != null)
+                {
+                    foreach (Ticket ticket in form.getSubmittedTickets())
+                    {
+                        printMessage(ticket.ToString());
+                    }
+                }
+                else
+                {
 
-                        bool isSuccess = form.updateTicket(employeeTicketId.Value, true);
-                        if (isSuccess)
-                        {
-                            Console.WriteLine("succesfully approved ticket");
-                            await form.setPendingTickets();
-                        }
+                    printMessage("You currently have no tickets.");
+                }
+                break;
+            case 4:
+                bool isViewingTickets = true;
+                while (isViewingTickets)
+                {
+                    foreach (Ticket ticket in form.getPendingTicket())
+                    {
+                        printTicket(ticket);
 
                     }
 
+                    Console.WriteLine("Please enter the id followed by \"approve\" or \"deny\" to approve or deny a reimbursment ticket.");
+                    Console.WriteLine("Enter x to leave. \n ");
 
+                    string? managerInput = Console.ReadLine();
+
+                    if (managerInput == "x")
+                    {
+                        isViewingTickets = false;
+                    }
+                    else
+                    {
+                        //TODO implement validation for choosing tickets 
+                        int? employeeTicketId = null;
+                        string? managerDecision = null;
+                        bool mgrInputIsValid = inputValidator.isValidManagerChoice(managerInput);
+
+                        if (mgrInputIsValid)
+                        {
+                            managerDecision = managerInput!.Substring(managerInput.IndexOf(" ") + 1).ToLower();
+                            string employeeIdStr = managerInput.Substring(0, managerInput.IndexOf(" ")).ToLower();
+                            employeeTicketId = int.Parse(employeeIdStr);
+
+                            bool isSuccess = form.updateTicket(employeeTicketId.Value, true);
+                            if (isSuccess)
+                            {
+                                Console.WriteLine("succesfully approved ticket");
+                                await form.setPendingTickets();
+                            }
+
+                        }
+
+
+
+                    }
 
                 }
 
-            }
-
-
+                break;
         }
+
 
 
 
@@ -326,7 +320,8 @@ static void printMessage(string message)
 
 }
 
-static void printTicket(Ticket ticket){
+static void printTicket(Ticket ticket)
+{
     Console.WriteLine("-----------------------------------------------");
     Console.WriteLine(ticket.ToString());
     Console.WriteLine("-----------------------------------------------");
