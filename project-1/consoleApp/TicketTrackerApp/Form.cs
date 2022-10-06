@@ -27,7 +27,7 @@ class Form{
     private List<Ticket>? _submittedTickets; 
 
     // returns 1 if successful or  -1 for unsuccessful 
-    public int postCreateUser(User user){
+    public bool postCreateUser(User user){
        // check if user already exists
        var newPostJson = JsonConvert.SerializeObject(user);
        var httpContent = new StringContent(newPostJson, Encoding.UTF8, "application/json");
@@ -36,10 +36,10 @@ class Form{
 
         if(result.StatusCode == System.Net.HttpStatusCode.OK){
         
-            return 1; 
+            return true; 
         }
         
-       return -1; 
+       return false; 
     }
 
     public int login(Login login){
@@ -52,12 +52,13 @@ class Form{
         IEnumerable<string> id;
         bool success = result.Headers.TryGetValues("id", out id);
         if(success){
-            int newId = int.Parse(id.First());
+            int newId = int.Parse(id!.First());
             setUserId(newId);
         }
 
         if(result.StatusCode == HttpStatusCode.OK){
             Console.WriteLine("succesfully logged in.");
+            
             return 1;
         } else if (result.StatusCode == HttpStatusCode.NotFound){
             Console.WriteLine("Sorry no account with that username was found");
@@ -91,7 +92,7 @@ class Form{
     public async Task setPendingTickets(){
         var response = await client.GetStringAsync(_getTicketsEndPoint);
         
-        List<Ticket> tickets =  JsonConvert.DeserializeObject<List<Ticket>>(response);
+        List<Ticket>? tickets =  JsonConvert.DeserializeObject<List<Ticket>>(response);
 
         _pendingTickets = tickets;
         
@@ -116,17 +117,13 @@ class Form{
 
     // TODO given a user id implement get tickets 
 
-    public void setTicketsById(int id){
-        string uri = _getTicketByIdEndpoint + id; 
-        var response =  client.GetAsync(uri).Result;
-        if(response.StatusCode == HttpStatusCode.NotFound){
-            Console.WriteLine("No tickets to show");
-            
-        } else {
-            List<Ticket> tickets = JsonConvert.DeserializeObject<List<Ticket>>(response.Content.ToString());
-            _submittedTickets = tickets;
-
-        }
+    public async Task setTicketsById(){
+        string uri = _getTicketByIdEndpoint + _userId; 
+        var response = await client.GetStringAsync(uri);
+       
+        List<Ticket>? tickets = JsonConvert.DeserializeObject<List<Ticket>>(response);
+        _submittedTickets = tickets;
+        
         
 
     }

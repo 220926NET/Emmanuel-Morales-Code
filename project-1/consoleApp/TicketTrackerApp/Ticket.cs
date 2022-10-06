@@ -6,7 +6,7 @@ class Ticket {
     public string? Name {get; set;}
     public int Amount {get; set;}
 
-    public string Status {get; set;} = "Pending";
+    public string Status {get; set;} = "pending";
 
     public int EmployeeId {get; set;}
 
