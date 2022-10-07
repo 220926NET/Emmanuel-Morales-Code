@@ -3,7 +3,7 @@ using Models;
 
 
 Requests requests = new Requests();
-Form form = new Form();
+Client form = new Client();
 InputValidator inputValidator = new InputValidator();
 User? loggedInUser = null;
 

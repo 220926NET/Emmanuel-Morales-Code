@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Net;
 using Models;
-class Form
+class Client
 {
 
     private static readonly HttpClient client = new HttpClient();

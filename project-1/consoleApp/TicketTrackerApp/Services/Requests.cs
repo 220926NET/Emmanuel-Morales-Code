@@ -2,7 +2,7 @@ using Models;
 class Requests
 {
 
-    Form form = new Form();
+    Client form = new Client();
     public ResponseMessage<string> postCreateUser(User user)
     {
 
