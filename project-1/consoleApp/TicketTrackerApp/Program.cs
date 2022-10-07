@@ -1,8 +1,11 @@
 ﻿
+using Models;
 
 
+Requests requests = new Requests();
 Form form = new Form();
 InputValidator inputValidator = new InputValidator();
+User? loggedInUser = null;
 
 bool exit = false;
 bool exitCreateUser = false;
@@ -48,8 +51,12 @@ while (!exit && !loggedIn)
                         Password = password!
                     };
 
-                    loggedIn = form.login(loginCredentials) == 1 ? true : false;
-                    isLoggingIn = false;
+                    ResponseMessage<User> responseMessage = requests.postLogin(loginCredentials);
+                    printMessage(responseMessage.message);
+                    loggedInUser = responseMessage.data;
+                    isLoggingIn = !responseMessage.success;
+                    loggedIn = responseMessage.success;
+
                 }
 
 
@@ -82,8 +89,6 @@ while (!exit && !loggedIn)
                 else
                 {
 
-                    // TODO check if username is available before submitting to create user
-
                     Login newLogin = new Login()
                     {
                         UserName = userName!,
@@ -95,15 +100,9 @@ while (!exit && !loggedIn)
                         login = newLogin
                     };
 
-                    if (form.postCreateUser(newUser))
-                    {
-                        exitCreateUser = true;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Sorry that username is taken, please try again.");
-                    };
-
+                    ResponseMessage<string> response = requests.postCreateUser(newUser);
+                    printMessage(response.message!);
+                    exitCreateUser = response.success;
                 }
 
 
@@ -121,35 +120,22 @@ while (!exit && !loggedIn)
 
 }
 
-/*
-   Ensure user form is updated with pending tickets and updates user id; 
-*/
-
-if (loggedIn)
-{
-    await form.getUserReq();
-    await form.setPendingTickets();
-    //TODO fix set tickets by Id
-    //Bug: awaiting causes newtwon parse error
-    printWelcomeMessage(form.getUser().Name!.ToUpper());
-}
-
-
-while (loggedIn)
+printWelcomeMessage(loggedInUser!.Name!.ToUpper());
+while (loggedInUser != null)
 {
 
     {
 
-
-        Console.WriteLine("Please type 1 to create a new ticket");
-        Console.WriteLine("Please type 2 to logout");
-        Console.WriteLine("Please type 3 to view all your ticket submissions. ");
+        Console.WriteLine("Enter 0 to logout.");
+        Console.WriteLine("Enter 1 to create a new ticket");
+        Console.WriteLine("Enter 2 to logout");
+        Console.WriteLine("Enter 3 to view all your ticket submissions. ");
 
         int options = 3;
 
-        if (form.getUser().IsManager)
+        if (loggedInUser.IsManager)
         {
-            Console.WriteLine("Please type 4 to view employee submissions.");
+            Console.WriteLine("Enter 4 to view employee submissions.");
             options = 4;
         }
 
@@ -158,114 +144,85 @@ while (loggedIn)
 
         switch (userOptionInt)
         {
+            case 0:
+                loggedInUser = null;
+                break;
             case 1:
                 Console.WriteLine("Please type a description for your ticket.");
                 string? description = Console.ReadLine();
-                bool isValidDescription = inputValidator.isValidDescriptioon(description);
 
                 Console.WriteLine("Please type an Amount.");
                 string? amountStr = Console.ReadLine();
-                bool isValidAmount = inputValidator.isValidAmount(amountStr);
-                int amount = 0;
 
-                if (isValidAmount)
-                {
-                    amount = int.Parse(amountStr!);
-                }
+                ResponseMessage<string> responseMessage = requests.postTicket(loggedInUser.Id, description, amountStr);
+                printMessage(responseMessage.message);
 
-                if (!isValidAmount || !isValidDescription)
-                {
-                    printErrorMessage("Please ensure Amount contains only numbers and Description contains characters!");
-                }
-                else
-                {
-                    Ticket ticket = new Ticket(description!, amount!, form.getUserId());
-                    bool postSuccess = form.postTicket(ticket) == 1 ? true : false;
-                    if (!postSuccess)
-                    {
-                        printErrorMessage("Error creating ticket, please try again later.");
-                    }
-                    else
-                    {
-                        printMessage("Succesfully created ticket.");
-                    }
-                }
                 break;
             case 2:
                 loggedIn = false;
                 break;
             case 3:
-                await form.setTicketsById();
-                if (form.getSubmittedTickets() != null)
+                ResponseMessage<List<Ticket>> getTicketResponse = requests.getUserTickets(loggedInUser.Id);
+                printMessage(getTicketResponse.message);
+                if (getTicketResponse.success)
                 {
-                    foreach (Ticket ticket in form.getSubmittedTickets())
+                    foreach (Ticket ticket in getTicketResponse.data!)
+                    {
+                        printMessage(ticket.ToString());
+                    }
+                }
+                break;
+            case 4:
+                ResponseMessage<List<Ticket>> pendingTicketsResponse = requests.getPendingTickets();
+                if (pendingTicketsResponse.success)
+                {
+                    foreach (Ticket ticket in pendingTicketsResponse.data!)
                     {
                         printMessage(ticket.ToString());
                     }
                 }
                 else
                 {
-
-                    printMessage("You currently have no tickets.");
+                    printErrorMessage(pendingTicketsResponse.message);
                 }
-                break;
-            case 4:
-                bool isViewingTickets = true;
-                while (isViewingTickets)
+                Console.WriteLine("Please enter the id followed by \"approve\" or \"deny\" to approve or deny a reimbursment ticket.");
+                Console.WriteLine("Enter x to leave. \n ");
+                string? managerInput = Console.ReadLine();
+
+                if (managerInput != "x")
                 {
-                    foreach (Ticket ticket in form.getPendingTicket())
-                    {
-                        printTicket(ticket);
 
+                    int? employeeTicketId = null;
+                    string? managerDecision = null;
+                    bool mgrInputIsValid = inputValidator.isValidManagerChoice(managerInput);
+
+                    if (mgrInputIsValid)
+                    {
+                        managerDecision = managerInput!.Substring(managerInput.IndexOf(" ") + 1).ToLower();
+                        string employeeIdStr = managerInput.Substring(0, managerInput.IndexOf(" ")).ToLower();
+                        employeeTicketId = int.Parse(employeeIdStr);
+
+                        ResponseMessage<string> updateTicketResponse = requests.updateTicket((int)employeeTicketId, true);
+                        printMessage(updateTicketResponse.message);
                     }
 
-                    Console.WriteLine("Please enter the id followed by \"approve\" or \"deny\" to approve or deny a reimbursment ticket.");
-                    Console.WriteLine("Enter x to leave. \n ");
 
-                    string? managerInput = Console.ReadLine();
-
-                    if (managerInput == "x")
-                    {
-                        isViewingTickets = false;
-                    }
-                    else
-                    {
-                        //TODO implement validation for choosing tickets 
-                        int? employeeTicketId = null;
-                        string? managerDecision = null;
-                        bool mgrInputIsValid = inputValidator.isValidManagerChoice(managerInput);
-
-                        if (mgrInputIsValid)
-                        {
-                            managerDecision = managerInput!.Substring(managerInput.IndexOf(" ") + 1).ToLower();
-                            string employeeIdStr = managerInput.Substring(0, managerInput.IndexOf(" ")).ToLower();
-                            employeeTicketId = int.Parse(employeeIdStr);
-
-                            bool isSuccess = form.updateTicket(employeeTicketId.Value, true);
-                            if (isSuccess)
-                            {
-                                Console.WriteLine("succesfully approved ticket");
-                                await form.setPendingTickets();
-                            }
-
-                        }
-
-
-
-                    }
 
                 }
 
                 break;
-        }
 
+        }
 
 
 
 
     }
 
+
 }
+
+
 
 static int getUserOption(string userOption)
 {

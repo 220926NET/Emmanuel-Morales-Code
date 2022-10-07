@@ -1,3 +1,5 @@
+
+namespace Models;
 class Ticket {
 
     public int Id {get; set;} = 0;

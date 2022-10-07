@@ -1,3 +1,4 @@
+namespace Models;
 class User {
 
     public int Id {get; set;}
