@@ -1,4 +1,4 @@
-class ResponseMessage<T>
+public class ResponseMessage<T>
 {
 
     public T? data { get; set; }

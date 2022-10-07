@@ -1,5 +1,5 @@
 using Models;
-class Requests
+class Requests : IRequestService
 {
 
     Client form = new Client();
@@ -26,27 +26,13 @@ class Requests
     {
 
         ResponseMessage<List<Ticket>> response = form.getUserTickets(id);
-
-        Console.WriteLine(response.data);
         return response;
     }
 
-    public ResponseMessage<string> postTicket(int userId, string? description, string? amountStr)
+    public ResponseMessage<string> postTicket(Ticket ticket)
     {
         InputValidator inputValidator = new InputValidator();
         ResponseMessage<string> responseMessage = new ResponseMessage<string>();
-
-        bool isValidDescription = inputValidator.isValidDescriptioon(description);
-        bool isValidAmount = inputValidator.isValidAmount(amountStr);
-        if (!isValidAmount || !isValidDescription)
-        {
-            responseMessage.message = "Please ensure Amount contains only numbers and Description contains characters!";
-            return responseMessage;
-        }
-
-        int amount = int.Parse(amountStr!);
-
-        Ticket ticket = new Ticket(description!, amount!, userId);
 
         responseMessage = form.postTicket(ticket);
 
@@ -62,10 +48,9 @@ class Requests
     }
 
 
-    public ResponseMessage<string> updateTicket(int id, bool approve)
+    public ResponseMessage<string> updateTicket(int id, string mgrDecision)
     {
-        string newStatus = approve ? "approved" : "denied";
-        ResponseMessage<string> responseMessage = form.updateTicket(id, newStatus);
+        ResponseMessage<string> responseMessage = form.updateTicket(id, mgrDecision);
 
         return responseMessage;
     }

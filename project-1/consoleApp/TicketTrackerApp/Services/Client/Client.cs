@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Net;
 using Models;
-class Client
+class Client : IRequestService
 {
 
     private static readonly HttpClient client = new HttpClient();

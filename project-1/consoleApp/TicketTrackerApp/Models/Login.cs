@@ -1,8 +1,9 @@
 namespace Models;
 
 
-class Login{
+public class Login
+{
 
     public string UserName;
-    public string Password; 
+    public string Password;
 }

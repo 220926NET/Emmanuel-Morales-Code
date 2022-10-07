@@ -155,8 +155,23 @@ while (loggedInUser != null)
                 Console.WriteLine("Please type an Amount.");
                 string? amountStr = Console.ReadLine();
 
-                ResponseMessage<string> responseMessage = requests.postTicket(loggedInUser.Id, description, amountStr);
-                printMessage(responseMessage.message);
+                bool isValidDescription = inputValidator.isValidDescriptioon(description);
+                bool isValidAmount = inputValidator.isValidAmount(amountStr);
+                if (!isValidAmount || !isValidDescription)
+                {
+                    Console.WriteLine("Please ensure Amount contains only numbers and Description contains characters!");
+
+                }
+                else
+                {
+                    int amountInt = int.Parse(amountStr);
+                    Ticket newTicket = new Ticket(description, amountInt, loggedInUser.Id);
+
+                    ResponseMessage<string> responseMessage = requests.postTicket(newTicket);
+                    printMessage(responseMessage.message);
+
+                }
+
 
                 break;
 
