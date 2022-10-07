@@ -126,9 +126,8 @@ while (loggedInUser != null)
 
     {
 
-        Console.WriteLine("Enter 0 to logout.");
-        Console.WriteLine("Enter 1 to create a new ticket");
-        Console.WriteLine("Enter 2 to logout");
+        Console.WriteLine("Enter 1 to logout.");
+        Console.WriteLine("Enter 2 to create a new ticket");
         Console.WriteLine("Enter 3 to view all your ticket submissions. ");
 
         int options = 3;
@@ -144,10 +143,12 @@ while (loggedInUser != null)
 
         switch (userOptionInt)
         {
-            case 0:
+
+            case 1:
                 loggedInUser = null;
                 break;
-            case 1:
+
+            case 2:
                 Console.WriteLine("Please type a description for your ticket.");
                 string? description = Console.ReadLine();
 
@@ -158,9 +159,7 @@ while (loggedInUser != null)
                 printMessage(responseMessage.message);
 
                 break;
-            case 2:
-                loggedIn = false;
-                break;
+
             case 3:
                 ResponseMessage<List<Ticket>> getTicketResponse = requests.getUserTickets(loggedInUser.Id);
                 printMessage(getTicketResponse.message);
@@ -192,21 +191,17 @@ while (loggedInUser != null)
                 if (managerInput != "x")
                 {
 
-                    int? employeeTicketId = null;
-                    string? managerDecision = null;
                     bool mgrInputIsValid = inputValidator.isValidManagerChoice(managerInput);
 
                     if (mgrInputIsValid)
                     {
-                        managerDecision = managerInput!.Substring(managerInput.IndexOf(" ") + 1).ToLower();
-                        string employeeIdStr = managerInput.Substring(0, managerInput.IndexOf(" ")).ToLower();
-                        employeeTicketId = int.Parse(employeeIdStr);
+                        string managerDecision = managerInput!.Substring(managerInput.IndexOf(" ") + 1).ToLower();
 
-                        ResponseMessage<string> updateTicketResponse = requests.updateTicket((int)employeeTicketId, true);
+                        int employeeTicketId = int.Parse(managerInput.Substring(0, managerInput.IndexOf(" ")).ToLower());
+
+                        ResponseMessage<string> updateTicketResponse = requests.updateTicket((int)employeeTicketId, managerDecision);
                         printMessage(updateTicketResponse.message);
                     }
-
-
 
                 }
 
@@ -224,14 +219,6 @@ while (loggedInUser != null)
 
 
 
-static int getUserOption(string userOption)
-{
-    int userOptionInt;
-
-    bool successParsingInt = int.TryParse(userOption, out userOptionInt);
-
-    return userOptionInt;
-}
 
 static int? isValidOptionInput(string? userOption, int options)
 {
