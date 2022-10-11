@@ -1,56 +1,56 @@
 using Models;
-class Requests : IRequestService
+class Requests : IRequest
 {
 
     Client form = new Client();
-    public ResponseMessage<string> postCreateUser(User user)
+    public ResponseMessage<string> PostCreateUser(User user)
     {
 
         ResponseMessage<string> responseMessage = new ResponseMessage<string>();
 
-        responseMessage = form.postCreateUser(user);
+        responseMessage = form.PostCreateUser(user);
 
         return responseMessage;
     }
 
-    public ResponseMessage<User> postLogin(Login login)
+    public ResponseMessage<User> PostLogin(Login login)
     {
 
-        ResponseMessage<User> responseMessage = form.postLogin(login);
+        ResponseMessage<User> responseMessage = form.PostLogin(login);
 
         return responseMessage;
     }
 
 
-    public ResponseMessage<List<Ticket>> getUserTickets(int id)
+    public ResponseMessage<List<Ticket>> GetUserTickets(int id)
     {
 
-        ResponseMessage<List<Ticket>> response = form.getUserTickets(id);
+        ResponseMessage<List<Ticket>> response = form.GetUserTickets(id);
         return response;
     }
 
-    public ResponseMessage<string> postTicket(Ticket ticket)
+    public ResponseMessage<string> PostTicket(Ticket ticket)
     {
         InputValidator inputValidator = new InputValidator();
         ResponseMessage<string> responseMessage = new ResponseMessage<string>();
 
-        responseMessage = form.postTicket(ticket);
+        responseMessage = form.PostTicket(ticket);
 
         return responseMessage;
 
     }
 
-    public ResponseMessage<List<Ticket>> getPendingTickets()
+    public ResponseMessage<List<Ticket>> GetPendingTickets()
     {
 
-        ResponseMessage<List<Ticket>> responseMessage = form.getPendingTickets();
+        ResponseMessage<List<Ticket>> responseMessage = form.GetPendingTickets();
         return responseMessage;
     }
 
 
-    public ResponseMessage<string> updateTicket(int id, string mgrDecision)
+    public ResponseMessage<string> UpdateTicket(int id, string mgrDecision)
     {
-        ResponseMessage<string> responseMessage = form.updateTicket(id, mgrDecision);
+        ResponseMessage<string> responseMessage = form.UpdateTicket(id, mgrDecision);
 
         return responseMessage;
     }

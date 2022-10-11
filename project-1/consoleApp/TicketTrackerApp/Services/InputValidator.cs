@@ -5,35 +5,57 @@ public class InputValidator
 
     //TODO write tests to verify functionality 
 
-    public bool isValidString(string? userName)
+    public bool IsValidString(string? userName)
     {
 
-        if (containsNull(userName))
+        if (ContainsNull(userName))
         {
             return false;
         }
         return true;
     }
 
-    public bool isValidPassword(string? password)
+//     public int? IsValidOption(string? userOption, int options)
+//     {
+//     InputValidator inputValidator = new InputValidator();
+//     bool validUserOption = inputValidator.IsValidOptionInput(userOption, options);
+//     int? userOptionInt = null;
+
+//     if (!validUserOption)
+//     {
+//         printErrorMessage("Please choose a valid option. ");
+
+//     }
+//     else
+//     {
+//         userOptionInt = int.Parse(userOption!);
+
+//     }
+//     return userOptionInt;
+
+// }
+
+
+    public bool IsValidPassword(string? password)
     {
-        if (containsNull(password)) return false;
+        if (ContainsNull(password)) return false;
 
         return true;
     }
 
-    public bool isValidOptionInput(string? input, int maxNumInput)
+    public bool IsValidOptionInput(string? input, int maxNumInput)
     {
         int num;
         bool inputIsNum = int.TryParse(input, out num);
         if (!inputIsNum || num > maxNumInput || num < 0)
         {
+            
             return false;
         }
         return true;
     }
 
-    public bool isValidDescriptioon(string? description)
+    public bool IsValidDescription(string? description)
     {
 
         if (String.IsNullOrEmpty(description)) return false;
@@ -42,16 +64,16 @@ public class InputValidator
         return true;
     }
 
-    public bool isValidAmount(string? amountStr)
+    public bool IsValidAmount(string? amountStr)
     {
-        if (containsNull(amountStr)) return false;
+        if (ContainsNull(amountStr)) return false;
         int amountInt = 0;
         bool isNum = int.TryParse(amountStr, out amountInt);
         if (!isNum) return false;
         return true;
     }
 
-    public bool isValidManagerChoice(string? decision)
+    public bool IsValidManagerChoice(string? decision)
     {
         if (string.IsNullOrWhiteSpace(decision)) return false;
         // Todo check that there exists at least two substrings 
@@ -65,14 +87,14 @@ public class InputValidator
 
 
             string managerDecision = decision.Substring(decision.IndexOf(" ") + 1).ToLower();
-            bool isValidManagerChoice = false;
+            bool IsValidManagerChoice = false;
 
             if (managerDecision == "approve" || managerDecision == "deny")
             {
-                isValidManagerChoice = true;
+                IsValidManagerChoice = true;
             }
 
-            return isValidEmployeeId && isValidManagerChoice;
+            return isValidEmployeeId && IsValidManagerChoice;
         }
         else
         {
@@ -81,7 +103,7 @@ public class InputValidator
 
     }
 
-    public bool containsNull(string? text)
+    public bool ContainsNull(string? text)
     {
         if (string.IsNullOrWhiteSpace(text))
         {

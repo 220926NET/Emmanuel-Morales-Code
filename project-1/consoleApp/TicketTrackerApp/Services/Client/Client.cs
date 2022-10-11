@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Net;
 using Models;
-class Client : IRequestService
+class Client : IRequest
 {
 
     private static readonly HttpClient client = new HttpClient();
@@ -24,7 +24,7 @@ class Client : IRequestService
     private string _getTicketByIdEndpoint = "https://localhost:7020/api/Ticket/";
 
 
-    public ResponseMessage<string> postCreateUser(User user)
+    public ResponseMessage<string> PostCreateUser(User user)
     {
         var newPostJson = JsonConvert.SerializeObject(user);
         var httpContent = new StringContent(newPostJson, Encoding.UTF8, "application/json");
@@ -38,7 +38,7 @@ class Client : IRequestService
     }
 
 
-    public ResponseMessage<User> postLogin(Login login)
+    public ResponseMessage<User> PostLogin(Login login)
     {
 
 
@@ -56,7 +56,7 @@ class Client : IRequestService
     }
 
 
-    public ResponseMessage<List<Ticket>> getUserTickets(int userId)
+    public ResponseMessage<List<Ticket>> GetUserTickets(int userId)
     {
         string uri = _getTicketByIdEndpoint + userId;
         var result = client.GetAsync(uri).Result;
@@ -71,7 +71,7 @@ class Client : IRequestService
 
     }
 
-    public ResponseMessage<List<Ticket>> getPendingTickets()
+    public ResponseMessage<List<Ticket>> GetPendingTickets()
     {
         var result = client.GetAsync(_getPendintTicketsEndPoint).Result;
         var content = result.Content.ReadAsStringAsync();
@@ -83,7 +83,7 @@ class Client : IRequestService
     }
 
 
-    public ResponseMessage<string> postTicket(Ticket ticket)
+    public ResponseMessage<string> PostTicket(Ticket ticket)
     {
         var newPostJson = JsonConvert.SerializeObject(ticket);
         var httpContent = new StringContent(newPostJson, Encoding.UTF8, "application/json");
@@ -96,7 +96,7 @@ class Client : IRequestService
         return responseMessage;
     }
 
-    public ResponseMessage<string> updateTicket(int id, string newStatus)
+    public ResponseMessage<string> UpdateTicket(int id, string newStatus)
     {
 
         string putReqUri = _putTicketEndPoint + id;
