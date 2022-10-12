@@ -10,7 +10,7 @@ public class Prompts
     {
         _inputvalidator = new InputValidator();
         _inputResponse = new InputResponse();
-        _requests = new Requests();
+        _requests = new Requests(ConnectionFactory.getApiConnection());
     }
 
     public int WelcomePrompt()
@@ -61,14 +61,21 @@ public class Prompts
             };
 
             ResponseMessage<User> postLoginResponse = _requests.PostLogin(loginCredentials);
-
-            Message.printMessage(postLoginResponse.message!);
-            user = new User
+            if (postLoginResponse.success)
             {
-                Id = postLoginResponse.data.Id!,
-                Name = postLoginResponse.data.Name!,
-                IsManager = postLoginResponse.data.IsManager
-            };
+                user = new User
+                {
+                    Id = postLoginResponse.data.Id!,
+                    Name = postLoginResponse.data.Name!,
+                    IsManager = postLoginResponse.data.IsManager
+                };
+            }
+            else
+            {
+                user = null;
+            }
+            Message.printMessage(postLoginResponse.message!);
+
 
         }
         else
