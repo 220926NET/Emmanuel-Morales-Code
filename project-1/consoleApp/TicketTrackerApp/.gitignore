@@ -232,7 +232,7 @@ _pkginfo.txt
 !?*.[Cc]ache/
 
 # Others
-ClientBin/
+ApiClientBin/
 ~$*
 *~
 *.dbmdl
@@ -297,9 +297,9 @@ node_modules/
 *.vbw
 
 # Visual Studio LightSwitch build output
-**/*.HTMLClient/GeneratedArtifacts
-**/*.DesktopClient/GeneratedArtifacts
-**/*.DesktopClient/ModelManifest.xml
+**/*.HTMLApiClient/GeneratedArtifacts
+**/*.DesktopApiClient/GeneratedArtifacts
+**/*.DesktopApiClient/ModelManifest.xml
 **/*.Server/GeneratedArtifacts
 **/*.Server/ModelManifest.xml
 _Pvt_Extensions

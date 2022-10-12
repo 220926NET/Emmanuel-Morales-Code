@@ -100,18 +100,22 @@ public class InputValidator
         if (!IsValidAmount(amountStr))
         {
             inputResponse.messages.Add("Please ensure to type a number for amount!");
-
+            inputResponse.success = false;
+            return inputResponse;
         }
 
         if (String.IsNullOrEmpty(description))
         {
             inputResponse.messages.Add("Please ensure to type a description!");
-
+            inputResponse.success = false;
+            return inputResponse;
         }
         if (inputResponse.messages.Count > 2)
         {
             inputResponse.success = false;
+            return inputResponse;
         }
+        inputResponse.success = true;
 
         return inputResponse;
     }

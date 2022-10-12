@@ -1,9 +1,8 @@
 using Newtonsoft.Json;
 
 using System.Text;
-using System.Net;
 using Models;
-class Client : IRequest
+class ApiClient : IRequest
 {
 
     private static readonly HttpClient client = new HttpClient();
