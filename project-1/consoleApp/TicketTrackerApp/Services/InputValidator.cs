@@ -5,70 +5,61 @@ public class InputValidator
 
     //TODO write tests to verify functionality 
 
-    public InputResponse IsValidUserName(string? userName)
+    public bool IsValidUserName(string? userName)
     {
-        InputResponse inputResponse = new InputResponse();
         if (string.IsNullOrEmpty(userName))
         {
-            inputResponse.messages.Add("Please make sure user name is not empty!");
-            inputResponse.success = false;
-            return inputResponse;
+
+            return false;
         }
 
-        inputResponse.success = true;
-        return inputResponse;
+        return true;
 
     }
 
 
-    public InputResponse isValidName(String str)
+    public bool isValidName(String str)
     {
-        InputResponse inputResponse = new InputResponse();
         if (string.IsNullOrEmpty(str))
         {
-            inputResponse.messages.Add("Please make sure name is not empty!");
-            inputResponse.success = false;
-            return inputResponse;
+
+            return false;
         }
 
-        inputResponse.success = true;
-        return inputResponse;
+        return true;
     }
-    public InputResponse IsValidPassword(string? password)
+    public bool IsValidPassword(string? password)
     {
-        InputResponse InputResponse = new InputResponse();
+
         bool containsDigit = false;
         for (int i = 0; i < 10; i++)
         {
             if (password.Contains(i.ToString()))
             {
                 containsDigit = true;
-                InputResponse.success = true;
+
             }
         }
 
         if (password.Trim().Length > 16)
         {
-            InputResponse.success = false;
-            InputResponse.messages.Add("Please ensure your password is 16 characters long!");
+            return false;
+
 
         }
         if (password.Trim().Length < 8)
         {
-            InputResponse.success = false;
-            InputResponse.messages.Add("Please ensure your password is at least 8 characters long!");
+            return false;
         }
         if (ContainsNull(password))
         {
-            InputResponse.success = false;
-            InputResponse.messages.Add("Please dont leave your password blank!");
+            return false;
         }
         if (!containsDigit)
         {
-            InputResponse.success = false;
-            InputResponse.messages.Add("Password must have at least one character!");
+            return false;
         }
-        return InputResponse;
+        return true;
     }
 
     public InputResponse IsValidOptionInput(string? input, int maxNumInput)
@@ -92,32 +83,26 @@ public class InputValidator
 
     }
 
-    public InputResponse IsValidDescriptionAndAmount(string? description, string? amountStr)
+    public bool IsValidDescriptionAndAmount(string? description, string? amountStr)
     {
 
-        InputResponse inputResponse = new InputResponse();
+
 
         if (!IsValidAmount(amountStr))
         {
-            inputResponse.messages.Add("Please ensure to type a number for amount!");
-            inputResponse.success = false;
-            return inputResponse;
+
+            return false;
         }
 
         if (String.IsNullOrEmpty(description))
         {
-            inputResponse.messages.Add("Please ensure to type a description!");
-            inputResponse.success = false;
-            return inputResponse;
-        }
-        if (inputResponse.messages.Count > 2)
-        {
-            inputResponse.success = false;
-            return inputResponse;
-        }
-        inputResponse.success = true;
 
-        return inputResponse;
+            return false;
+        }
+
+
+
+        return true;
     }
 
     public bool IsValidAmount(string? amountStr)
@@ -129,49 +114,25 @@ public class InputValidator
         return true;
     }
 
-    public InputResponse IsValidManagerChoice(string? decision)
+    public bool IsValidManagerChoice(int? id, string? decision)
     {
-        InputResponse decisionInputRes = new InputResponse();
+
         if (string.IsNullOrWhiteSpace(decision))
         {
-            decisionInputRes.success = false;
-            decisionInputRes.messages.Add("Please enter your decision!");
-            return decisionInputRes;
+
+            return false;
+        }
+        if (decision.ToLower() != "approve" || decision.ToLower() != "deny")
+        {
+            return false;
+        }
+        if (id == null)
+        {
+            return false;
         }
         // Todo check that there exists at least two substrings 
-        var decisionStrArr = decision.Split();
-        if (decisionStrArr.Length == 2)
-        {
-            string? employeeId = decision.Substring(0, decision.IndexOf(" ")).ToLower();
-            int num = 0;
-            bool isValidEmployeeId = int.TryParse(employeeId, out num);
+        return true;
 
-
-
-            string managerDecision = decision.Substring(decision.IndexOf(" ") + 1).ToLower();
-            bool IsValidManagerChoice = false;
-
-            if (managerDecision == "approve" || managerDecision == "deny")
-            {
-                IsValidManagerChoice = true;
-            }
-
-            if (isValidEmployeeId && IsValidManagerChoice)
-            {
-                decisionInputRes.success = true;
-                return decisionInputRes;
-            }
-
-            if (!isValidEmployeeId || !IsValidManagerChoice) decisionInputRes.messages.Add("Please make sure to type employee id followed by a space and your decision!");
-
-            return decisionInputRes;
-        }
-        else
-        {
-            decisionInputRes.messages.Add("Please make sure to type the ticket id followed by a space and eitheir \"approve\" or \"deny\"");
-            decisionInputRes.success = false;
-            return decisionInputRes;
-        }
 
     }
 

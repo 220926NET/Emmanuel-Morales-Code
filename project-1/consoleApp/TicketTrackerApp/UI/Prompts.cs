@@ -5,12 +5,14 @@ public class Prompts
     private InputResponse _inputResponse;
     private InputValidator _inputvalidator;
 
-    private Requests _requests;
+    private RequestService _RequestService;
+
+
     public Prompts()
     {
         _inputvalidator = new InputValidator();
         _inputResponse = new InputResponse();
-        _requests = new Requests(ConnectionFactory.getApiConnection());
+        _RequestService = new RequestService();
     }
 
     public int WelcomePrompt()
@@ -45,121 +47,65 @@ public class Prompts
 
         Console.WriteLine("Please type your username.");
         string? userName = Console.ReadLine();
-        _inputResponse = _inputvalidator.IsValidUserName(userName);
 
         InputResponse isValidPasswordRes = new InputResponse();
         Console.WriteLine("Please type your password.");
         string? password = Console.ReadLine();
-        isValidPasswordRes = _inputvalidator.IsValidPassword(password);
 
-        if (_inputResponse.success && isValidPasswordRes.success)
+        Login loginCreds = new Login()
         {
-            Login loginCredentials = new Login
-            {
-                UserName = userName!,
-                Password = password!
-            };
-
-            ResponseMessage<User> postLoginResponse = _requests.PostLogin(loginCredentials);
-            if (postLoginResponse.success)
-            {
-                user = new User
-                {
-                    Id = postLoginResponse.data.Id!,
-                    Name = postLoginResponse.data.Name!,
-                    IsManager = postLoginResponse.data.IsManager
-                };
-            }
-            else
-            {
-                user = null;
-            }
-            Message.printMessage(postLoginResponse.message!);
-
-
-        }
-        else
-        {
-            _inputResponse.messages = new List<string>() { "Please dont leave user name blank!" };
-            printInputReponseMessages(_inputResponse);
-            printInputReponseMessages(isValidPasswordRes);
-            user = null;
-        }
-
-
+            UserName = userName,
+            Password = password
+        };
+        ResponseMessage<User> postLoginResponse = _RequestService.PostLogin(loginCreds);
+        Message.printMessage(postLoginResponse.message);
+        user = postLoginResponse.data;
 
     }
 
     public void AskManagerApprovalPrompt()
     {
-        Console.WriteLine("Please enter the id followed by \"approve\" or \"deny\" to approve or deny a reimbursment ticket.");
-        Console.WriteLine("Enter x to leave. \n ");
+        Console.WriteLine("Please enter the ticket id.");
+        string? ticketIdstr = Console.ReadLine();
+        int ticketId = 0;
+        bool isValidTicketId = int.TryParse(ticketIdstr, out ticketId);
+        Console.WriteLine("Please enter approve or deny.");
         string? managerInput = Console.ReadLine();
-        if (managerInput.Trim().ToLower() == "x") return;
-
-
-        _inputResponse = _inputvalidator.IsValidManagerChoice(managerInput);
-
-        if (_inputResponse.success)
-        {
-            string managerDecision = managerInput!.Substring(managerInput.IndexOf(" ") + 1).ToLower();
-
-            int employeeTicketId = int.Parse(managerInput.Substring(0, managerInput.IndexOf(" ")).ToLower());
-
-            ResponseMessage<string> UpdateTicketResponse = _requests.UpdateTicket((int)employeeTicketId, managerDecision);
-            Message.printMessage(UpdateTicketResponse.message);
-        }
-        else
-        {
-            printInputReponseMessages(_inputResponse);
-        }
-
-
+        ResponseMessage<string> UpdateTicketResponse = _RequestService.UpdateTicket(ticketId, managerInput);
+        Message.printMessage(UpdateTicketResponse.message!);
     }
 
     public void CreateUserPrompt()
     {
 
-        InputResponse isValidNameRes = new InputResponse();
+
         Console.WriteLine("Please type your name: ");
         string? nameInput = Console.ReadLine();
-        isValidNameRes = _inputvalidator.isValidName(nameInput);
 
-        InputResponse isValidUserNameRes = new InputResponse();
+
         Console.WriteLine("Please type your username: ");
         string? userNameInput = Console.ReadLine();
-        isValidUserNameRes = _inputvalidator.IsValidUserName(userNameInput);
 
-        InputResponse isValidPassRes = new InputResponse();
+
+
         Console.WriteLine("Please type your password");
         string? passwordInput = Console.ReadLine();
-        isValidPassRes = _inputvalidator.IsValidPassword(passwordInput);
 
-
-        if (!isValidPassRes.success || !isValidNameRes.success || !isValidUserNameRes.success)
+        User newUser = new User()
         {
-            printInputReponseMessages(isValidNameRes);
-            printInputReponseMessages(isValidPassRes);
-            printInputReponseMessages(isValidUserNameRes);
-
-        }
-        else
-        {
-            Login newLogin = new Login()
+            Name = nameInput,
+            login = new Login()
             {
-                UserName = userNameInput!,
-                Password = passwordInput!
-            };
-            User newUser = new User()
-            {
-                Name = nameInput,
-                login = newLogin
-            };
+                UserName = userNameInput,
+                Password = passwordInput
+            }
+        };
 
-            ResponseMessage<string> CreateUserResponse = _requests.PostCreateUser(newUser);
-            Message.printMessage(CreateUserResponse.message!);
+        ResponseMessage<string> CreateUserResponse = _RequestService.PostCreateUser(newUser);
+        Message.printMessage(CreateUserResponse.message!);
 
-        }
+
+
 
     }
 
@@ -197,31 +143,22 @@ public class Prompts
 
         Console.WriteLine("Please type an Amount.");
         string? amountStr = Console.ReadLine();
-
-
-        _inputResponse = _inputvalidator.IsValidDescriptionAndAmount(descriptionStr, amountStr);
-        bool isValidResponse = _inputResponse.success;
-
-        if (!isValidResponse)
+        bool isValidInput = _inputvalidator.IsValidDescriptionAndAmount(descriptionStr, amountStr);
+        if (isValidInput)
         {
-            foreach (string message in _inputResponse.messages)
-            {
-                Message.printErrorMessage(message);
-            }
+            Ticket newTicket = new Ticket(descriptionStr, decimal.Parse(amountStr), loggedInUserId);
+            ResponseMessage<string> responseMessage = _RequestService.PostTicket(newTicket);
         }
-        else
-        {
-            int amountInt = int.Parse(amountStr);
-            Ticket newTicket = new Ticket(descriptionStr, amountInt, loggedInUserId);
-            ResponseMessage<string> responseMessage = _requests.PostTicket(newTicket);
-            Message.printMessage(responseMessage.message);
-        }
+
+
+
+
 
     }
 
     public void printUserTickets(int userId)
     {
-        ResponseMessage<List<Ticket>> getTicketResponse = _requests.GetUserTickets(userId);
+        ResponseMessage<List<Ticket>> getTicketResponse = _RequestService.GetUserTickets(userId);
 
         Message.printMessage(getTicketResponse.message!);
         if (getTicketResponse.success)
@@ -235,7 +172,7 @@ public class Prompts
 
     public void printPendingTickets()
     {
-        ResponseMessage<List<Ticket>> pendingTicketsResponse = _requests.GetPendingTickets();
+        ResponseMessage<List<Ticket>> pendingTicketsResponse = _RequestService.GetPendingTickets();
         if (pendingTicketsResponse.success)
         {
             foreach (Ticket ticket in pendingTicketsResponse.data!)

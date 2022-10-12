@@ -307,7 +307,7 @@ class SqlClient : IRequest
     }
 
 
-    public ResponseMessage<string> UpdateTicket(int id, string newStatus)
+    public ResponseMessage<string> UpdateTicket(int? id, string? newStatus)
     {
         ResponseMessage<string> updateTicketRes = new ResponseMessage<string>();
         try

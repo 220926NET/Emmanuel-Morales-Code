@@ -95,7 +95,7 @@ class ApiClient : IRequest
         return responseMessage;
     }
 
-    public ResponseMessage<string> UpdateTicket(int id, string newStatus)
+    public ResponseMessage<string> UpdateTicket(int? id, string? newStatus)
     {
 
         string putReqUri = _putTicketEndPoint + id;
