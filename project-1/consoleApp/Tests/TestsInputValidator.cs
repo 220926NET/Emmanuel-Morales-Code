@@ -7,6 +7,7 @@ public class TestsInputValidator
     [InlineData("abcdefkljskldfjl;asfjasfj")]
     public void Test_Password_Validator_Greater_Than_Sixteen_Characters(string password)
     {
+        
         InputValidator inputValidator = new InputValidator();
         InputResponse InputResponse = new InputResponse();
         InputResponse = inputValidator.IsValidPassword(password);

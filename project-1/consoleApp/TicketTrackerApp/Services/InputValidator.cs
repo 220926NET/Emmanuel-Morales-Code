@@ -168,7 +168,7 @@ public class InputValidator
         }
         else
         {
-            decisionInputRes.messages.Add("Please make sure to type the ticket id followed by a space and eitheir \"approve\" or \"deny\"");
+            decisionInputRes.messages.Add("Please make sure to type the ticket id followed by a space and ethier \"approve\" or \"deny\"");
             decisionInputRes.success = false;
             return decisionInputRes;
         }
