@@ -10,7 +10,7 @@ public class Prompts
     {
         _inputvalidator = new InputValidator();
         _inputResponse = new InputResponse();
-        _requests = new Requests(ConnectionFactory.getApiConnection());
+        _requests = new Requests(ConnectionFactory.getSqlConnection());
     }
 
     public int WelcomePrompt()
