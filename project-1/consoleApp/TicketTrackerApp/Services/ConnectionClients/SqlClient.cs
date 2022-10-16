@@ -18,7 +18,7 @@ class SqlClient : IRequest
     {
         ResponseMessage<string> postUserResponse = new ResponseMessage<string>();
 
-        if (userAlreadyExists(user.login.UserName))
+        if (userAlreadyExists(user.login!.UserName))
         {
             postUserResponse.message = "Sorry username already exists";
             postUserResponse.success = false;
@@ -27,10 +27,9 @@ class SqlClient : IRequest
         try
         {
             _connection.Open();
-            SqlCommand cmd = new SqlCommand("INSERT INTO Logins (User_name, passsword) OUTPUT Inserted.Id VALUES  (@userName, @password);", _connection);
+            SqlCommand cmd = new SqlCommand("exec createLogin @userName, @password ", _connection);
             cmd.Parameters.AddWithValue("@userName", user.login.UserName);
             cmd.Parameters.AddWithValue("@password", user.login.Password);
-
             SqlDataReader reader = cmd.ExecuteReader();
             int? loginId = null;
             if (reader.HasRows)
@@ -40,19 +39,18 @@ class SqlClient : IRequest
                     loginId = (int)reader["id"];
 
                 }
-
             }
             else
             {
                 postUserResponse.success = false;
-                postUserResponse.message = "Issue adding user to database.";
+                postUserResponse.message = "There was an issue adding user to database.";
                 return postUserResponse;
             }
             _connection.Close();
             _connection.Open();
             if (loginId != null)
             {
-                SqlCommand cmdEmployee = new SqlCommand("INSERT INTO employees (Name, Login_id) VALUES(@name, @loginId);", _connection);
+                SqlCommand cmdEmployee = new SqlCommand("exec createEmployee @name, @loginId;", _connection);
                 cmdEmployee.Parameters.AddWithValue("@name", user.Name);
                 cmdEmployee.Parameters.AddWithValue("@loginId", loginId);
                 int RowsAffect = cmdEmployee.ExecuteNonQuery();
@@ -68,8 +66,7 @@ class SqlClient : IRequest
         }
         catch (SqlException)
         {
-
-            postUserResponse.message = "error creating user, please try again.";
+            postUserResponse.message = "There was an error creating user, please try again.";
             postUserResponse.success = false;
         }
         finally
@@ -80,7 +77,7 @@ class SqlClient : IRequest
         return postUserResponse;
     }
 
-    // Post the users login information and retrieves the user Id to references resources 
+  
 
     public ResponseMessage<User> PostLogin(Login login)
     {
@@ -89,7 +86,7 @@ class SqlClient : IRequest
         {
             _connection.Open();
 
-            SqlCommand command = new SqlCommand("SELECT Id FROM Logins WHERE User_name = @user_name And passsword=@password;", _connection);
+            SqlCommand command = new SqlCommand("exec sp_getUserLoginId @user_name, @password;", _connection);
             command.Parameters.AddWithValue("@user_name", login.UserName);
             command.Parameters.AddWithValue("@password", login.Password);
 
@@ -105,31 +102,28 @@ class SqlClient : IRequest
             }
             else
             {
-                loginUserResponse.message = "Sorry could not log you in. Please check your password and username!";
+                loginUserResponse.message = "Sorry could not log you in. Please verify your password and username!";
                 loginUserResponse.success = false;
                 return loginUserResponse;
             }
             _connection.Close();
-
             _connection.Open();
-            SqlCommand getUserCmd = new SqlCommand("SELECT Id, name, Is_Manger FROM Employees WHERE Login_id = @LoginId;", _connection);
+            SqlCommand getUserCmd = new SqlCommand("exec sp_getLoginInfo @LoginId;", _connection);
             getUserCmd.Parameters.AddWithValue("@LoginId", loginId);
             SqlDataReader getUserReader = getUserCmd.ExecuteReader();
             if (getUserReader.HasRows)
             {
-                bool isManger = false;
+                
                 while (getUserReader.Read())
                 {
                     User newUser = new User()
                     {
+                        
                         Id = (int)getUserReader["Id"],
                         Name = getUserReader["name"].ToString(),
+                        IsManager = bool.Parse(getUserReader["IsManager"].ToString().ToLower())
                     };
-                    if (getUserReader["Is_Manger"].ToString() == "1")
-                    {
-                        isManger = true;
-                    }
-                    newUser.IsManager = isManger;
+                   
                     loginUserResponse.data = newUser;
                     loginUserResponse.success = true;
                     loginUserResponse.message = "Successfully logged in!";
@@ -146,7 +140,7 @@ class SqlClient : IRequest
 
 
         }
-        catch (SqlException ex)
+        catch (SqlException)
         {
             loginUserResponse.message = "Issue connecting to database";
             loginUserResponse.success = false;
@@ -171,27 +165,24 @@ class SqlClient : IRequest
         try
         {
             _connection.Open();
-            SqlCommand cmd = new SqlCommand("Insert into Tickets (Description,Amount, EmployeeId) VALUES(@description,@amount,@employeeId);", _connection);
+            SqlCommand cmd = new SqlCommand("exec createTicket @description, @amount, @employeeId;", _connection);
             cmd.Parameters.AddWithValue("@description", ticket.Description);
             cmd.Parameters.AddWithValue("@amount", ticket.Amount);
             cmd.Parameters.AddWithValue("@employeeId", ticket.EmployeeId);
 
             int rowsAffected = cmd.ExecuteNonQuery();
 
-
             if (rowsAffected == 1)
             {
                 postTicketRes.message = "Successfully created Ticket";
                 postTicketRes.success = true;
-
                 _connection.Close();
             }
-            _connection.Close();
-
+        
         }
-        catch (SqlException e)
+        catch (SqlException)
         {
-            postTicketRes.message = "Error creating ticket, please try again";
+            postTicketRes.message = "There was an error creating ticket, please try again";
             postTicketRes.success = false;
 
         }
@@ -201,8 +192,6 @@ class SqlClient : IRequest
         }
 
         return postTicketRes;
-
-
     }
 
     public ResponseMessage<List<Ticket>> GetPendingTickets()
@@ -214,14 +203,14 @@ class SqlClient : IRequest
         {
             _connection.Open();
 
-            SqlCommand command = new SqlCommand("Select * from tickets where status = 'pending' ", _connection);
+            SqlCommand command = new SqlCommand("exec sp_getPendingTickets ", _connection);
             SqlDataReader reader = command.ExecuteReader();
 
             if (reader.HasRows)
             {
                 while (reader.Read())
-                {
-                    Ticket newTicket = new Ticket(reader["Description"].ToString(), (decimal)reader["amount"], (int)reader["EmployeeId"]);
+                {   
+                    Ticket newTicket = new Ticket((int)reader["TicketId"], reader["Description"].ToString()!,reader["Name"].ToString()!,(decimal)reader["Amount"],reader["Status"].ToString()!,(int)reader["EmployeeId"]);
                     ticketList.Add(newTicket);
 
                 }
@@ -234,19 +223,14 @@ class SqlClient : IRequest
                 getPendingTicketsRes.success = false;
 
             }
-            _connection.Close();
-
-
-
-
         }
-        catch (SqlException ex)
+        catch (SqlException )
         {
             getPendingTicketsRes.message = "Issue retrieving tickets, please try again!";
             getPendingTicketsRes.success = false;
 
 
-        }
+        } 
         finally
         {
             _connection.Close();
@@ -263,16 +247,15 @@ class SqlClient : IRequest
         {
             _connection.Open();
 
-            SqlCommand command = new SqlCommand("Select * from tickets where EmployeeId = @employeeId; ", _connection);
+            SqlCommand command = new SqlCommand("exec sp_getTicketsByid @employeeId; ", _connection);
             command.Parameters.AddWithValue("@employeeId", id);
             SqlDataReader reader = command.ExecuteReader();
-
 
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    Ticket newTicket = new Ticket(reader["Description"].ToString(), (decimal)reader["amount"], (int)reader["EmployeeId"]);
+                    Ticket newTicket = new Ticket((int)reader["TicketId"], reader["Description"].ToString()!,reader["Name"].ToString()!,(decimal)reader["Amount"],reader["Status"].ToString()!,(int)reader["EmployeeId"]);
 
                     ticketList.Add(newTicket);
 
@@ -286,17 +269,12 @@ class SqlClient : IRequest
                 getUserTicketRes.success = false;
 
             }
-            _connection.Close();
-
-
-
 
         }
-        catch (SqlException ex)
+        catch (SqlException)
         {
-            getUserTicketRes.message = "Issue retrieving tickets, please try again!";
+            getUserTicketRes.message = "There was an issue retrieving tickets, please contact your admin!";
             getUserTicketRes.success = false;
-
 
         }
         finally
@@ -314,7 +292,7 @@ class SqlClient : IRequest
         {
             _connection.Open();
 
-            SqlCommand command = new SqlCommand("Update Tickets SET status = @newStatus  WHERE id = @ticketId;  ", _connection);
+            SqlCommand command = new SqlCommand("exec updateTicket @newStatus, @ticketId", _connection);
             command.Parameters.AddWithValue("@ticketId", id);
             command.Parameters.AddWithValue("@newStatus", newStatus);
             int rowsAffected = command.ExecuteNonQuery();
@@ -331,13 +309,8 @@ class SqlClient : IRequest
             }
 
 
-            _connection.Close();
-
-
-
-
         }
-        catch (SqlException ex)
+        catch (SqlException)
         {
             updateTicketRes.message = "Issue updating tickets, please try again!";
             updateTicketRes.success = false;
@@ -360,7 +333,7 @@ class SqlClient : IRequest
         try
         {
             _connection.Open();
-            SqlCommand cmd = new SqlCommand("SELECT * FROM Logins WHERE User_name = @userName;", _connection);
+            SqlCommand cmd = new SqlCommand("exec userAlreadyExists @userName;", _connection);
             cmd.Parameters.AddWithValue("@userName", userName);
         
             SqlDataReader reader = cmd.ExecuteReader();
@@ -371,12 +344,11 @@ class SqlClient : IRequest
                 return false;
             }
             
-
         }
         catch (SqlException)
         {
 
-            return true;
+            return false;
         }
         finally
         {
