@@ -18,7 +18,7 @@ class SqlClient : IRequest
     {
         ResponseMessage<string> postUserResponse = new ResponseMessage<string>();
 
-        if (userAlreadyExists(user.login!.UserName))
+        if (userAlreadyExists(user.login!.UserName!))
         {
             postUserResponse.message = "Sorry username already exists";
             postUserResponse.success = false;
@@ -29,7 +29,7 @@ class SqlClient : IRequest
             _connection.Open();
             SqlCommand cmd = new SqlCommand("exec createLogin @userName, @password ", _connection);
             cmd.Parameters.AddWithValue("@userName", user.login.UserName);
-            cmd.Parameters.AddWithValue("@password", user.login.Password);
+            cmd.Parameters.AddWithValue("@password", user.login.getPassword());
             SqlDataReader reader = cmd.ExecuteReader();
             int? loginId = null;
             if (reader.HasRows)
@@ -88,7 +88,7 @@ class SqlClient : IRequest
 
             SqlCommand command = new SqlCommand("exec sp_getUserLoginId @user_name, @password;", _connection);
             command.Parameters.AddWithValue("@user_name", login.UserName);
-            command.Parameters.AddWithValue("@password", login.Password);
+            command.Parameters.AddWithValue("@password", login.getPassword());
 
             SqlDataReader reader = command.ExecuteReader();
             int? loginId = null;
@@ -121,7 +121,7 @@ class SqlClient : IRequest
                         
                         Id = (int)getUserReader["Id"],
                         Name = getUserReader["name"].ToString(),
-                        IsManager = bool.Parse(getUserReader["IsManager"].ToString().ToLower())
+                        IsManager = bool.Parse(getUserReader["IsManager"].ToString()!.ToLower())
                     };
                    
                     loginUserResponse.data = newUser;
