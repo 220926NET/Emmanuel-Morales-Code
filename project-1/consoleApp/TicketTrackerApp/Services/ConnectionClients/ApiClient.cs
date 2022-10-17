@@ -7,14 +7,11 @@ class ApiClient : IRequest
 
     private static readonly HttpClient client = new HttpClient();
 
-    private User? _user;
     private string _SignUpEndpoint = "https://localhost:7020/api/SignUp";
 
     private string _LoginEndpoint = "https://localhost:7020/api/Login";
 
     private string _PostTicketEndPoint = "https://localhost:7020/api/Ticket";
-
-    private string _getUserEndPoint = "https://localhost:7020/api/Login/";
 
     private string _getPendintTicketsEndPoint = "https://localhost:7020/api/Ticket";
 
@@ -39,7 +36,6 @@ class ApiClient : IRequest
 
     public ResponseMessage<User> PostLogin(Login login)
     {
-
 
         var newPostJson = JsonConvert.SerializeObject(login);
         var httpContent = new StringContent(newPostJson, Encoding.UTF8, "application/json");

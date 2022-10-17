@@ -1,61 +1,77 @@
 using Models;
-class RequestService : IRequest
-{
+
+
+/// <summary>
+/// Class <c>RequestService</c> deals with validating user input and sending information to a client for persistence.
+/// </summary>
+class RequestService{
 
     private IRequest _client;
     private InputValidator _inputvalidator;
-
-
     public RequestService()
     {
         _client = ConnectionFactory.getSqlConnection();
         _inputvalidator = new InputValidator();
     }
-
-    public ResponseMessage<string> PostCreateUser(User newUser)
+    /// <summary>
+    /// <method><c>PostCreateUser<c></method> 
+    /// <para>
+    /// This method validates user data and sends it to a client. 
+    /// </para> 
+    ///<returns>
+    /// A <c>ResponseMessage</c> object containing a success flag, message string and requested data
+    /// </returns> 
+    /// </summary>
+    public ResponseMessage<string> CreateUser(string? name, string? userName, string? password)
     {
 
         ResponseMessage<string> responseMessage = new ResponseMessage<string>();
 
-        bool isValidName = _inputvalidator.isValidName(newUser.Name);
-        bool isValidUserName = _inputvalidator.IsValidUserName(newUser.login.UserName);
-        bool isValidPass = _inputvalidator.IsValidPassword(newUser.login.Password);
+        bool isValidName = _inputvalidator.isValidName(name);
+        bool isValidUserName = _inputvalidator.isValidName(userName);
+        bool isValidPass = _inputvalidator.IsValidPassword(password);
 
         if (isValidName && isValidUserName && isValidPass)
         {
             User user = new User()
             {
-                Name = newUser.Name,
-                login = newUser.login
+                Name = name, 
+                login = new Login(userName!, password!)
+                   
             };
             responseMessage = _client.PostCreateUser(user);
         }
         else
         {
-
             responseMessage.success = false;
             responseMessage.message = "Please ensure your include a valid name, username and password!";
         }
 
 
         return responseMessage;
-    }
+    }  
+    /// <summary>
+    /// <method><c>PostLogin<c></method> 
+    /// <para>
+    /// This method validates login credentials and sends data to a client. 
+    /// </para> 
+    ///<returns>
+    /// A <c>ResponseMessage</c> object containing a success flag, message string and requested data
+    /// </returns> 
+    /// </summary>
 
-    public ResponseMessage<User> PostLogin(Login loginCred)
+    public ResponseMessage<User> PostLogin(string? username, string? password)
     {
 
         ResponseMessage<User> postLoginResponse = new ResponseMessage<User>();
 
-        bool isValidUserName = _inputvalidator.IsValidUserName(loginCred.UserName);
-        bool isValidPassword = _inputvalidator.IsValidPassword(loginCred.Password);
+        bool isValidUserName = _inputvalidator.isValidName(username);
+        bool isValidPassword = _inputvalidator.IsValidPassword(password);
 
         if (isValidUserName && isValidPassword)
         {
-            Login loginCredentials = new Login
-            {
-                UserName = loginCred.UserName!,
-                Password = loginCred.Password!
-            };
+            Login loginCredentials = new Login(username!, password!);
+            
 
             postLoginResponse = _client.PostLogin(loginCredentials);
 
@@ -63,7 +79,7 @@ class RequestService : IRequest
             {
                 User user = new User
                 {
-                    Id = postLoginResponse.data.Id!,
+                    Id = postLoginResponse.data!.Id,
                     Name = postLoginResponse.data.Name!,
                     IsManager = postLoginResponse.data.IsManager
                 };
@@ -71,6 +87,7 @@ class RequestService : IRequest
             else
             {
                 postLoginResponse.data = null;
+                postLoginResponse.message = "Sorry unable to log you in, please ensure your username and password are correct!"; 
                 postLoginResponse.success = false;
 
             }
@@ -78,7 +95,7 @@ class RequestService : IRequest
         }
         else
         {
-            postLoginResponse.message = "Please ensure your password and username are correct.";
+            postLoginResponse.message = "Please ensure your password and username are valid.";
             postLoginResponse.data = null;
             return postLoginResponse;
 
@@ -87,7 +104,15 @@ class RequestService : IRequest
         return postLoginResponse;
     }
 
-
+    /// <summary>
+    /// <method><c>GetUserTickets<c></method> 
+    /// <para>
+    /// This method retrieves user Tickets based on their id. 
+    /// </para> 
+    ///<returns>
+    /// A <c>ResponseMessage</c> object containing a success flag, message string and requested data
+    /// </returns> 
+    /// </summary>
     public ResponseMessage<List<Ticket>> GetUserTickets(int id)
     {
 
@@ -95,17 +120,33 @@ class RequestService : IRequest
         return response;
     }
 
-    public ResponseMessage<string> PostTicket(Ticket ticket)
+
+    /// <summary>
+    /// <method><c>PostTicket<c></method> 
+    /// <para>
+    /// This method creates new user Tickets using their userId. 
+    /// </para> 
+    /// </summary>
+    public ResponseMessage<string> PostTicket(string description, decimal amount, int userId)
     {
         InputValidator inputValidator = new InputValidator();
         ResponseMessage<string> responseMessage = new ResponseMessage<string>();
-
-        responseMessage = _client.PostTicket(ticket);
-
+        
+        Ticket newTicket = new Ticket(description, amount, userId);
+        responseMessage = _client.PostTicket(newTicket);
         return responseMessage;
-
     }
 
+
+    /// <summary>
+    /// <method><c>GetPendingTickets<c></method> 
+    /// <para>
+    /// This method returns pending tickets from the client. 
+    /// </para> 
+    ///<returns>
+    /// A <c>ResponseMessage</c> object containing a success flag, message string and requested data
+    /// </returns> 
+    /// </summary>
     public ResponseMessage<List<Ticket>> GetPendingTickets()
     {
 
@@ -113,11 +154,18 @@ class RequestService : IRequest
         return responseMessage;
     }
 
-
+    /// <summary>
+    /// <method><c>PostLogin<c></method> 
+    /// <para>
+    /// This method validates new ticket status and id before sending it for persistence. 
+    /// </para> 
+    ///<returns>
+    /// A <c>ResponseMessage</c> object containing a success flag, message string and requested data
+    /// </returns> 
+    /// </summary>
     public ResponseMessage<string> UpdateTicket(int? id, string? newStatus)
     {
         ResponseMessage<string> responseMessage = new ResponseMessage<string>();
-
 
         bool isValidManagerChocie = _inputvalidator.IsValidManagerChoice(id, newStatus);
 
