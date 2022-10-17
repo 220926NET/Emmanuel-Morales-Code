@@ -2770,11 +2770,16 @@
     ]
   },
   "packageFolders": {
+<<<<<<< HEAD
     "C:\\Users\\Emman\\.nuget\\packages\\": {}
+=======
+    "C:\\Users\\Emmanuel\\.nuget\\packages\\": {}
+>>>>>>> origin
   },
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
       "projectUniqueName": "C:\\Users\\Emman\\Revature\\Emmanuel-Morales-Code\\api\\projectOneApi-v1\\projectOneApi-v1\\projectOneApi-v1.csproj",
       "projectName": "projectOneApi-v1",
       "projectPath": "C:\\Users\\Emman\\Revature\\Emmanuel-Morales-Code\\api\\projectOneApi-v1\\projectOneApi-v1\\projectOneApi-v1.csproj",
@@ -2783,11 +2788,26 @@
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Emman\\AppData\\Roaming\\NuGet\\NuGet.Config"
+=======
+      "projectUniqueName": "C:\\Users\\Emmanuel\\Revature\\Emmanuel-Morales-Code\\api\\projectOneApi-v1\\projectOneApi-v1\\projectOneApi-v1.csproj",
+      "projectName": "projectOneApi-v1",
+      "projectPath": "C:\\Users\\Emmanuel\\Revature\\Emmanuel-Morales-Code\\api\\projectOneApi-v1\\projectOneApi-v1\\projectOneApi-v1.csproj",
+      "packagesPath": "C:\\Users\\Emmanuel\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Emmanuel\\Revature\\Emmanuel-Morales-Code\\api\\projectOneApi-v1\\projectOneApi-v1\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\Emmanuel\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+>>>>>>> origin
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
+<<<<<<< HEAD
+=======
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+>>>>>>> origin
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2864,7 +2884,11 @@
             "privateAssets": "all"
           }
         },
+<<<<<<< HEAD
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+=======
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+>>>>>>> origin
       }
     }
   }

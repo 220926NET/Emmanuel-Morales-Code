@@ -95,22 +95,42 @@ namespace projectOneApi_v1.Services.TicketService
 
         public ServiceResponse<ActionResult> updateTicketStatusById(string value, int id)
         {
+
             ServiceResponse<ActionResult> response = new ServiceResponse<ActionResult>();
             Tickets ticket = _dbContext.Tickets.Where(ticket => ticket.Id == id).First();
-            ticket.Status = value;
-
-            int amountOfSaves = _dbContext.SaveChanges();
-            if(amountOfSaves > 0)
+           
+            
+            if(ticket.Status != "pending")
             {
-                response.Message = "Successfully updated!";
-                response.Success = true; 
+                response.Message = "Please choose a valid ticket!";
+                response.Success = false;
+                return response; 
+            } 
 
+            if (value.ToLower() == "approve" || value.ToLower() == "deny")
+            {
+                ticket.Status = value;
+                int amountOfSaves = _dbContext.SaveChanges();
+                if (amountOfSaves > 0)
+                {
+                    response.Message = "Successfully updated!";
+                    response.Success = true;
+
+                }
+                else
+                {
+
+                    response.Message = "Unable to update ticket";
+                    response.Success = false;
+                }
+                
             } else
             {
-
-                response.Message = "Unable to update ticket";
-                response.Success = false; 
+                response.Message = "You can only approve or deny tickets";
+                response.Success = false;
+                return response;
             }
+            
 
             return response; 
             

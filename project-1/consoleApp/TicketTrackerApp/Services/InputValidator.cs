@@ -189,7 +189,13 @@ public class InputValidator
         }
         if (decision.ToLower() != "approve" || decision.ToLower() != "deny")
         {
+<<<<<<< HEAD
             return false;
+=======
+            decisionInputRes.messages.Add("Please make sure to type the ticket id followed by a space and ethier \"approve\" or \"deny\"");
+            decisionInputRes.success = false;
+            return decisionInputRes;
+>>>>>>> origin
         }
         if (id == null)
         {

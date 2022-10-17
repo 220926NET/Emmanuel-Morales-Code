@@ -1,7 +1,7 @@
 using Microsoft.Data.SqlClient;
 using Models;
 
-class SqlClient : IRequest
+public class SqlClient : IRequest
 {
 
     private SqlConnection _connection;
@@ -20,7 +20,7 @@ class SqlClient : IRequest
 
         if (userAlreadyExists(user.login!.UserName!))
         {
-            postUserResponse.message = "Sorry username already exists";
+            postUserResponse.message = "Sorry username already exists.";
             postUserResponse.success = false;
             return postUserResponse;
         }
@@ -55,7 +55,7 @@ class SqlClient : IRequest
                 cmdEmployee.Parameters.AddWithValue("@loginId", loginId);
                 int RowsAffect = cmdEmployee.ExecuteNonQuery();
                 postUserResponse.success = true;
-                postUserResponse.message = "Successfully created user";
+                postUserResponse.message = "User created successfully!";
             }
             else
             {
@@ -102,7 +102,12 @@ class SqlClient : IRequest
             }
             else
             {
+<<<<<<< HEAD
                 loginUserResponse.message = "Sorry could not log you in. Please verify your password and username!";
+=======
+               
+                loginUserResponse.message = "Sorry could not log you in. Please make sure your password and username are correct.";
+>>>>>>> origin
                 loginUserResponse.success = false;
                 return loginUserResponse;
             }
@@ -174,7 +179,7 @@ class SqlClient : IRequest
 
             if (rowsAffected == 1)
             {
-                postTicketRes.message = "Successfully created Ticket";
+                postTicketRes.message = "Successfully created Ticket.";
                 postTicketRes.success = true;
                 _connection.Close();
             }
@@ -335,15 +340,23 @@ class SqlClient : IRequest
             _connection.Open();
             SqlCommand cmd = new SqlCommand("exec userAlreadyExists @userName;", _connection);
             cmd.Parameters.AddWithValue("@userName", userName);
-        
+
             SqlDataReader reader = cmd.ExecuteReader();
 
-            if(reader.Read()){
-                return true; 
-            } else {
+            if (reader.Read())
+            {
+                return true;
+            }
+            else
+            {
                 return false;
             }
+<<<<<<< HEAD
             
+=======
+
+
+>>>>>>> origin
         }
         catch (SqlException)
         {

@@ -14,7 +14,11 @@ public class Prompts
     {
         _inputvalidator = new InputValidator();
         _inputResponse = new InputResponse();
+<<<<<<< HEAD
         _RequestService = new RequestService();
+=======
+        _requests = new Requests(ConnectionFactory.getSqlConnection());
+>>>>>>> origin
     }
 
     /// <summary>
