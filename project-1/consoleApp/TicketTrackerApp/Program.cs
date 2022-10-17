@@ -1,13 +1,14 @@
-﻿
-using Models;
+﻿using Models;
+
+
+/// <summary>
+/// Keeps track of a logged in user and navigates a menu based on user inputs
+///</summary>
 
 
 Prompts prompts = new Prompts();
 User? loggedInUser = null;
-
 bool exit = false;
-
-
 
 while (loggedInUser == null && !exit)
 {
