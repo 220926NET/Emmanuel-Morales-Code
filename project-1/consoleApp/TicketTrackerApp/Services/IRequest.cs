@@ -13,7 +13,7 @@ public interface IRequest
 
     public ResponseMessage<List<Ticket>> GetPendingTickets();
 
-    public ResponseMessage<string> UpdateTicket(int id, string newStatus);
+    public ResponseMessage<string> UpdateTicket(int? id, string? newStatus);
 
 
 

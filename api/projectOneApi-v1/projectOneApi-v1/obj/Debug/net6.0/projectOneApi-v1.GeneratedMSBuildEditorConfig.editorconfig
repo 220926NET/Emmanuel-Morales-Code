@@ -8,9 +8,17 @@ build_property.PlatformNeutralAssembly =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = projectOneApi_v1
 build_property.RootNamespace = projectOneApi_v1
+<<<<<<< HEAD
+build_property.ProjectDir = C:\Users\Emman\Revature\Emmanuel-Morales-Code\api\projectOneApi-v1\projectOneApi-v1\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Emman\Revature\Emmanuel-Morales-Code\api\projectOneApi-v1\projectOneApi-v1
+=======
 build_property.ProjectDir = C:\Users\Emmanuel\Revature\Emmanuel-Morales-Code\api\projectOneApi-v1\projectOneApi-v1\
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
 build_property.MSBuildProjectDirectory = C:\Users\Emmanuel\Revature\Emmanuel-Morales-Code\api\projectOneApi-v1\projectOneApi-v1
+>>>>>>> origin
 build_property._RazorSourceGeneratorDebug = 

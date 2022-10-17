@@ -1,187 +1,208 @@
 using System.Text;
 
+
+/// <summary>
+/// Class <c>InputValidator</c> deals with validating strings 
+/// </summary>
 public class InputValidator
 {
 
-    //TODO write tests to verify functionality 
+    
+    
+    
+    
 
-    public InputResponse IsValidUserName(string? userName)
+    /// <summary>
+    /// <method><c>IsValidUserName<c></method> 
+    /// <para>
+    /// This method validates user name by checking if the string is Null or empty
+    /// </para> 
+    ///<returns>
+    /// True or false
+    /// </returns> 
+    /// </summary>
+    public bool isValidName(String? name)
     {
-        InputResponse inputResponse = new InputResponse();
-        if (string.IsNullOrEmpty(userName))
+        if (string.IsNullOrEmpty(name))
         {
-            inputResponse.messages.Add("Please make sure user name is not empty!");
-            inputResponse.success = false;
-            return inputResponse;
+
+            return false;
         }
 
-        inputResponse.success = true;
-        return inputResponse;
-
+        return true;
     }
 
-
-    public InputResponse isValidName(String str)
+    /// <summary>
+    /// <method><c>IsValidPassword<c></method> 
+    /// <para>
+    /// This method validates user password by checking if it contains at least one digit and is not null or empty, 
+    /// 
+    /// </para> 
+    ///<returns>
+    /// True or false
+    /// </returns> 
+    /// </summary>
+    public bool IsValidPassword(string? password)
     {
-        InputResponse inputResponse = new InputResponse();
-        if (string.IsNullOrEmpty(str))
-        {
-            inputResponse.messages.Add("Please make sure name is not empty!");
-            inputResponse.success = false;
-            return inputResponse;
-        }
 
-        inputResponse.success = true;
-        return inputResponse;
-    }
-    public InputResponse IsValidPassword(string? password)
-    {
-        InputResponse InputResponse = new InputResponse();
         bool containsDigit = false;
+        if (string.IsNullOrEmpty(password))
+        {
+            return false;
+        }
         for (int i = 0; i < 10; i++)
         {
-            if (password.Contains(i.ToString()))
+            if (password!.Contains(i.ToString()))
             {
                 containsDigit = true;
-                InputResponse.success = true;
+
             }
         }
 
-        if (password.Trim().Length > 16)
+        if (password!.Trim().Length > 16)
         {
-            InputResponse.success = false;
-            InputResponse.messages.Add("Please ensure your password is 16 characters long!");
+            return false;
+
 
         }
         if (password.Trim().Length < 8)
         {
-            InputResponse.success = false;
-            InputResponse.messages.Add("Please ensure your password is at least 8 characters long!");
+            return false;
         }
-        if (ContainsNull(password))
-        {
-            InputResponse.success = false;
-            InputResponse.messages.Add("Please dont leave your password blank!");
-        }
+        
         if (!containsDigit)
         {
-            InputResponse.success = false;
-            InputResponse.messages.Add("Password must have at least one character!");
+            return false;
         }
-        return InputResponse;
+        return true;
     }
 
-    public InputResponse IsValidOptionInput(string? input, int maxNumInput)
+    /// <summary>
+    /// <method><c>IsValidOptionInput<c></method> 
+    /// <para>
+    /// This method validates user options by ensuring they stay within 0 (exclusive) and maxNumInput(Inclusive)
+    /// </para> 
+    ///<returns>
+    /// True or false
+    /// </returns> 
+    /// </summary>
+    public bool IsValidOptionInput(string? input, int maxNumInput = 3)
     {
-        InputResponse inputResponse = new InputResponse();
         int num;
         bool inputIsNum = int.TryParse(input, out num);
-        if (!inputIsNum || num > maxNumInput || num < 0)
+        if (!inputIsNum || num > maxNumInput || num < 1)
         {
-
-            inputResponse.success = false;
-            inputResponse.messages.Add($"Please type a number between 1 and {maxNumInput}");
-            return inputResponse;
+            return false;
         }
         else
         {
-            inputResponse.success = true;
-            return inputResponse;
+            return true;
         }
-
-
     }
 
-    public InputResponse IsValidDescriptionAndAmount(string? description, string? amountStr)
+    /// <summary>
+    /// <method><c>IsValidDescriptionAndAmount<c></method> 
+    /// <para>
+    /// This method validates a amount string and description str by ensuring 
+    /// that amount str can be converted into a decimal and description string is not null 
+    /// </para> 
+    ///<returns>
+    /// True or false
+    /// </returns> 
+    /// </summary>
+    public bool IsValidDescriptionAndAmount(string? description, string? amountStr)
     {
-
-        InputResponse inputResponse = new InputResponse();
 
         if (!IsValidAmount(amountStr))
         {
-            inputResponse.messages.Add("Please ensure to type a number for amount!");
-            inputResponse.success = false;
-            return inputResponse;
+
+            return false;
         }
 
         if (String.IsNullOrEmpty(description))
         {
-            inputResponse.messages.Add("Please ensure to type a description!");
-            inputResponse.success = false;
-            return inputResponse;
-        }
-        if (inputResponse.messages.Count > 2)
-        {
-            inputResponse.success = false;
-            return inputResponse;
-        }
-        inputResponse.success = true;
 
-        return inputResponse;
+            return false;
+        }
+
+
+
+        return true;
     }
 
+    /// <summary>
+    /// <method><c>isValidTicketDescription<c></method> 
+    /// <para>
+    /// This method validates a amount string and description str by ensuring 
+    /// that amount str can be converted into a decimal and description string is not null 
+    /// </para> 
+    ///<returns>
+    /// True or false
+    /// </returns> 
+    /// </summary>
+    public bool isValidTicketDescription(string? description){
+        // TODO add more validation 
+        if (String.IsNullOrEmpty(description))
+        {
+
+            return false;
+        }
+
+        return true;
+    }
+    
+    /// <summary>
+    /// <method><c>IsValidAmount<c></method> 
+    /// <para>
+    /// This method validates a amount string a by testing if amountStr can be converted into a decimal
+    /// </para> 
+    ///<returns>
+    /// True or false
+    /// </returns> 
+    /// </summary>
     public bool IsValidAmount(string? amountStr)
     {
-        if (ContainsNull(amountStr)) return false;
-        int amountInt = 0;
-        bool isNum = int.TryParse(amountStr, out amountInt);
+        if (String.IsNullOrEmpty(amountStr)) return false;
+        decimal amountInt = 0;
+        bool isNum = decimal.TryParse(amountStr, out amountInt);
         if (!isNum) return false;
         return true;
     }
 
-    public InputResponse IsValidManagerChoice(string? decision)
+    /// <summary>
+    /// <method><c>IsValidAmount<c></method> 
+    /// <para>
+    /// This method validates an id and decision by ensuring that 
+    /// id can be converted into an integer and decision is equal to ethier = "approve" or "deny"
+    /// </para> 
+    ///<returns>
+    /// True or false
+    /// </returns> 
+    /// </summary>
+    public bool IsValidManagerChoice(int? id, string? decision)
     {
-        InputResponse decisionInputRes = new InputResponse();
+
         if (string.IsNullOrWhiteSpace(decision))
         {
-            decisionInputRes.success = false;
-            decisionInputRes.messages.Add("Please enter your decision!");
-            return decisionInputRes;
+
+            return false;
         }
-        // Todo check that there exists at least two substrings 
-        var decisionStrArr = decision.Split();
-        if (decisionStrArr.Length == 2)
+        if (decision.ToLower() != "approve" || decision.ToLower() != "deny")
         {
-            string? employeeId = decision.Substring(0, decision.IndexOf(" ")).ToLower();
-            int num = 0;
-            bool isValidEmployeeId = int.TryParse(employeeId, out num);
-
-
-
-            string managerDecision = decision.Substring(decision.IndexOf(" ") + 1).ToLower();
-            bool IsValidManagerChoice = false;
-
-            if (managerDecision == "approve" || managerDecision == "deny")
-            {
-                IsValidManagerChoice = true;
-            }
-
-            if (isValidEmployeeId && IsValidManagerChoice)
-            {
-                decisionInputRes.success = true;
-                return decisionInputRes;
-            }
-
-            if (!isValidEmployeeId || !IsValidManagerChoice) decisionInputRes.messages.Add("Please make sure to type employee id followed by a space and your decision!");
-
-            return decisionInputRes;
-        }
-        else
-        {
+<<<<<<< HEAD
+            return false;
+=======
             decisionInputRes.messages.Add("Please make sure to type the ticket id followed by a space and ethier \"approve\" or \"deny\"");
             decisionInputRes.success = false;
             return decisionInputRes;
+>>>>>>> origin
         }
-
-    }
-
-    public bool ContainsNull(string? text)
-    {
-        if (string.IsNullOrWhiteSpace(text))
+        if (id == null)
         {
-            return true;
+            return false;
         }
-        return false;
-    }
+       
+        return true;
 
+    }
 }
