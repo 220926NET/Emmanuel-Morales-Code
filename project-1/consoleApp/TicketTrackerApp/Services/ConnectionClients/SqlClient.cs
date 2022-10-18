@@ -102,12 +102,8 @@ public class SqlClient : IRequest
             }
             else
             {
-<<<<<<< HEAD
-                loginUserResponse.message = "Sorry could not log you in. Please verify your password and username!";
-=======
                
                 loginUserResponse.message = "Sorry could not log you in. Please make sure your password and username are correct.";
->>>>>>> origin
                 loginUserResponse.success = false;
                 return loginUserResponse;
             }
@@ -208,7 +204,7 @@ public class SqlClient : IRequest
         {
             _connection.Open();
 
-            SqlCommand command = new SqlCommand("exec sp_getPendingTickets ", _connection);
+            SqlCommand command = new SqlCommand("exec getPendingTickets ", _connection);
             SqlDataReader reader = command.ExecuteReader();
 
             if (reader.HasRows)
@@ -261,7 +257,6 @@ public class SqlClient : IRequest
                 while (reader.Read())
                 {
                     Ticket newTicket = new Ticket((int)reader["TicketId"], reader["Description"].ToString()!,reader["Name"].ToString()!,(decimal)reader["Amount"],reader["Status"].ToString()!,(int)reader["EmployeeId"]);
-
                     ticketList.Add(newTicket);
 
                 }
@@ -278,7 +273,7 @@ public class SqlClient : IRequest
         }
         catch (SqlException)
         {
-            getUserTicketRes.message = "There was an issue retrieving tickets, please contact your admin!";
+            getUserTicketRes.message = "There was an issue retrieving tickets!";
             getUserTicketRes.success = false;
 
         }
@@ -351,12 +346,8 @@ public class SqlClient : IRequest
             {
                 return false;
             }
-<<<<<<< HEAD
-            
-=======
 
 
->>>>>>> origin
         }
         catch (SqlException)
         {
