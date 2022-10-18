@@ -10,7 +10,7 @@ Prompts prompts = new Prompts();
 User? loggedInUser = null;
 bool exit = false;
 
-while (loggedInUser == null && !exit)
+while ( !exit)
 {
 
     int userOptionInt = prompts.WelcomePrompt();
@@ -36,21 +36,19 @@ while (loggedInUser == null && !exit)
             break;
     }
 
-
-}
-
 if (loggedInUser != null) Message.printWelcomeMessage(loggedInUser!.Name!.ToUpper());
 
 while (loggedInUser != null)
 {
 
     {
-        int userOptionInt = prompts.HomePrompt(loggedInUser.IsManager);
+        int userOption = prompts.HomePrompt(loggedInUser.IsManager);
 
-        switch (userOptionInt)
+        switch (userOption)
         {
 
             case 1:
+                Message.printMessage("Logging you out "+loggedInUser.Name!.ToUpper());
                 loggedInUser = null;
                 break;
 
@@ -70,8 +68,10 @@ while (loggedInUser != null)
                 prompts.printPendingTickets();
 
                 prompts.AskManagerApprovalPrompt();
-
                 break;
         }
     }
 }
+}
+
+
