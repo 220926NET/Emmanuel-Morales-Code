@@ -14,11 +14,7 @@ public class Prompts
     {
         _inputvalidator = new InputValidator();
         _inputResponse = new InputResponse();
-<<<<<<< HEAD
         _RequestService = new RequestService();
-=======
-        _requests = new Requests(ConnectionFactory.getSqlConnection());
->>>>>>> origin
     }
 
     /// <summary>
@@ -34,9 +30,7 @@ public class Prompts
         Console.WriteLine("Enter 2 to register a new acount.");
         Console.WriteLine("Enter 3 to exit\n");
         string? userOptionStr = Console.ReadLine();
-
         bool inputIsValid = _inputvalidator.IsValidOptionInput(userOptionStr);
-        
         if (inputIsValid)
         {
             return int.Parse(userOptionStr!); 
@@ -101,16 +95,11 @@ public class Prompts
     /// </summary>
     public void CreateUserPrompt()
     {
-
-
         Console.WriteLine("Please type your name: ");
         string? name = Console.ReadLine();
 
-
         Console.WriteLine("Please type your username: ");
         string? userName = Console.ReadLine();
-
-
 
         Console.WriteLine("Please type your password");
         string? password = Console.ReadLine();
@@ -166,7 +155,7 @@ public class Prompts
         string? description = Console.ReadLine();
 
         while(!_inputvalidator.isValidTicketDescription(description)){
-            Message.printErrorMessage("Please input a valid description!"); 
+            Message.printErrorMessage("Please input a valid description that is less than 50 characters!"); 
             Console.WriteLine("Please type a description for your ticket.");
             description = Console.ReadLine();
         }; 
@@ -195,13 +184,15 @@ public class Prompts
     {
         ResponseMessage<List<Ticket>> getTicketResponse = _RequestService.GetUserTickets(userId);
 
-        Message.printMessage(getTicketResponse.message!);
+        
         if (getTicketResponse.success)
         {
             foreach (Ticket ticket in getTicketResponse.data!)
             {
                 Message.printMessage(ticket.ToString());
             }
+        } else {
+            Message.printMessage(getTicketResponse.message!); 
         }
     }
 
