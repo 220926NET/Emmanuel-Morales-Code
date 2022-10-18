@@ -32,7 +32,7 @@ public class Ticket
     public override string ToString()
     {
         string amountStr = string.Format("{0:0.00}", Amount);
-        return $"{Id} - {Name} - {Description} - ${amountStr} - {Status}";
+        return $"Ticket Id:{Id} - {Name} - {Description} - ${amountStr} - {Status}";
     }
 
 }
