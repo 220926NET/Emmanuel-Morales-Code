@@ -44,7 +44,7 @@ class RequestService{
         else
         {
             responseMessage.success = false;
-            responseMessage.message = "Please ensure your include a valid name, username and password!";
+            responseMessage.message = "Password must be less than 16 characters but greater than 7 characters and contain one number!";
         }
 
 
