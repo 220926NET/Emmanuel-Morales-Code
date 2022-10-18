@@ -142,12 +142,19 @@ public class InputValidator
     /// </summary>
     public bool isValidTicketDescription(string? description){
         // TODO add more validation 
+        
+       
         if (String.IsNullOrEmpty(description))
         {
 
             return false;
         }
 
+         if(description.Length > 50){
+            return false; 
+        }
+    
+        
         return true;
     }
     
@@ -162,9 +169,16 @@ public class InputValidator
     /// </summary>
     public bool IsValidAmount(string? amountStr)
     {
+        
         if (String.IsNullOrEmpty(amountStr)) return false;
+        foreach(char num in amountStr){
+            if(!char.IsDigit(num) && num != '.'){
+                return false; 
+            }
+        }
         decimal amountInt = 0;
         bool isNum = decimal.TryParse(amountStr, out amountInt);
+
         if (!isNum) return false;
         return true;
     }
@@ -187,15 +201,9 @@ public class InputValidator
 
             return false;
         }
-        if (decision.ToLower() != "approve" || decision.ToLower() != "deny")
+        if (decision.ToLower() != "approve" && decision.ToLower() != "deny")
         {
-<<<<<<< HEAD
             return false;
-=======
-            decisionInputRes.messages.Add("Please make sure to type the ticket id followed by a space and ethier \"approve\" or \"deny\"");
-            decisionInputRes.success = false;
-            return decisionInputRes;
->>>>>>> origin
         }
         if (id == null)
         {
