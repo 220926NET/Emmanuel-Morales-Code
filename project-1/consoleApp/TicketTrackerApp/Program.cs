@@ -48,7 +48,7 @@ while (loggedInUser != null)
         {
 
             case 1:
-                Message.printMessage("Logging you out "+loggedInUser.Name!.ToUpper());
+                Message.printMessage(loggedInUser.Name!.ToUpper() + " has logged out.");
                 loggedInUser = null;
                 break;
 

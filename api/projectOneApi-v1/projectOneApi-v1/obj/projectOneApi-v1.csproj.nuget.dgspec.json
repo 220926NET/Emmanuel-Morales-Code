@@ -1,7 +1,6 @@
 {
   "format": 1,
   "restore": {
-<<<<<<< HEAD
     "C:\\Users\\Emman\\Revature\\Emmanuel-Morales-Code\\api\\projectOneApi-v1\\projectOneApi-v1\\projectOneApi-v1.csproj": {}
   },
   "projects": {
@@ -15,33 +14,14 @@
         "outputPath": "C:\\Users\\Emman\\Revature\\Emmanuel-Morales-Code\\api\\projectOneApi-v1\\projectOneApi-v1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Emman\\AppData\\Roaming\\NuGet\\NuGet.Config"
-=======
-    "C:\\Users\\Emmanuel\\Revature\\Emmanuel-Morales-Code\\api\\projectOneApi-v1\\projectOneApi-v1\\projectOneApi-v1.csproj": {}
-  },
-  "projects": {
-    "C:\\Users\\Emmanuel\\Revature\\Emmanuel-Morales-Code\\api\\projectOneApi-v1\\projectOneApi-v1\\projectOneApi-v1.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\Emmanuel\\Revature\\Emmanuel-Morales-Code\\api\\projectOneApi-v1\\projectOneApi-v1\\projectOneApi-v1.csproj",
-        "projectName": "projectOneApi-v1",
-        "projectPath": "C:\\Users\\Emmanuel\\Revature\\Emmanuel-Morales-Code\\api\\projectOneApi-v1\\projectOneApi-v1\\projectOneApi-v1.csproj",
-        "packagesPath": "C:\\Users\\Emmanuel\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Emmanuel\\Revature\\Emmanuel-Morales-Code\\api\\projectOneApi-v1\\projectOneApi-v1\\obj\\",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "C:\\Users\\Emmanuel\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Emman\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
->>>>>>> origin
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-<<<<<<< HEAD
-=======
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
->>>>>>> origin
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -59,70 +39,17 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "dependencies": {
-            "AutoMapper.Collection.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "AutoMapper.Extensions.ExpressionMapping": {
-              "target": "Package",
-              "version": "[5.0.0, )"
-            },
-            "Microsoft.AspNetCore.Authentication.JwtBearer": {
-              "target": "Package",
-              "version": "[6.0.9, )"
-            },
-            "Microsoft.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[6.0.9, )"
-            },
-            "Microsoft.EntityFrameworkCore.Design": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[6.0.9, )"
-            },
-            "Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite": {
-              "target": "Package",
-              "version": "[6.0.9, )"
-            },
-            "Microsoft.IdentityModel.Tokens": {
-              "target": "Package",
-              "version": "[6.23.1, )"
-            },
-            "Swashbuckle.AspNetCore": {
-              "target": "Package",
-              "version": "[6.2.3, )"
-            },
-            "System.IdentityModel.Tokens.Jwt": {
-              "target": "Package",
-              "version": "[6.23.1, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-<<<<<<< HEAD
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
-=======
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
->>>>>>> origin
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
         }
       }
     }

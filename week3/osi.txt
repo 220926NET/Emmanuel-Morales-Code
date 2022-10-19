@@ -1,0 +1,26 @@
+please do not throw sausage pizza away 
+
+osi layers
+-------
+application 
+presentation
+sesssion 
+transport
+network
+datalink 
+physical
+
+
+
+HTTP Request 
+-------------
+1) Parse the url 
+2) Resolve address to an IP google.com -> 8.8.8.8
+3) Each osi layer attaches a pdu (packet data unit) 
+    - The header precedes its body and contains addressing and other data 
+4) Arp Address resolution protocol - get mac address of default router to begin routing packets 
+5) Determine how to route packet based on routing table 
+6) Packet is routing throughout the network. L2 headers are modified to include the destination mac address
+    L3 headers are checked for the reciepent. 
+    - if recipient is not the intended recipent headers are modified for the next destination (router)
+7) 
