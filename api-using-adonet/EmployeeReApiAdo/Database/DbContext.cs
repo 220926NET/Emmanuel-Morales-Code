@@ -14,11 +14,11 @@ public class DbContext
         _connection = new SqlConnection(_connectionString);
     }
 
-    public ServiceResponse<string> CreateUser(Employee newEmployee)
+    public ServiceResponse<string> CreateUser(RegisterAccountDto newEmployee)
     {
             ServiceResponse<string> createUserResponse = new ServiceResponse<string>(); 
 
-        if (userAlreadyExists(newEmployee.login!.UserName!))
+        if (userAlreadyExists(newEmployee.UserName))
         {
             createUserResponse.Message = "Sorry username already exists.";
             createUserResponse.Success = false;
@@ -28,8 +28,8 @@ public class DbContext
         {
             _connection.Open();
             SqlCommand cmd = new SqlCommand("exec createLogin @userName, @password ", _connection);
-            cmd.Parameters.AddWithValue("@userName", newEmployee.login.UserName);
-            cmd.Parameters.AddWithValue("@password", newEmployee.login.Password);
+            cmd.Parameters.AddWithValue("@userName", newEmployee.UserName);
+            cmd.Parameters.AddWithValue("@password", newEmployee.Password);
             SqlDataReader reader = cmd.ExecuteReader();
             int? loginId = null;
             if (reader.HasRows)
@@ -242,6 +242,8 @@ public class DbContext
         return createTicketRes;
     }
 
+
+
     public ServiceResponse<List<TicketDto>> getTicketsById(int id)
     {
        
@@ -335,6 +337,44 @@ public class DbContext
 
     }
 
+
+    // public ServiceResponse<string> AddEmployeePhoto(byte[] photo, int employeeId){
+    //     ServiceResponse<string> addPhotoRes = new ServiceResponse<string>(); 
+    //     try
+    //     {
+    //         _connection.Open();
+    //         SqlCommand cmd = new SqlCommand("exec setEmployeeImage @photo, @EmployeeId;", _connection);
+    //         cmd.Parameters.AddWithValue("@photo", photo);
+    //         cmd.Parameters.AddWithValue("@employeeId", employeeId);
+
+    //         int rowsAffected = cmd.ExecuteNonQuery();
+
+    //         if(rowsAffected == 1){
+    //             addPhotoRes.Success = true; 
+    //             addPhotoRes.Message = "Successfully Added Photo."; 
+    //         } else {
+
+    //             addPhotoRes.Success = false;
+    //             addPhotoRes.Message = "Unable to add photo, please try again."; 
+    //         }
+
+            
+
+
+    //     }
+    //     catch (SqlException)
+    //     {
+    //         addPhotoRes.Success = false; 
+    //         addPhotoRes.Message = "Unexpected error please try again later!"; 
+    //         return addPhotoRes; 
+            
+    //     }
+    //     finally
+    //     {
+    //         _connection.Close();
+    //     }
+    //     return addPhotoRes; 
+    // }
 
     public bool userAlreadyExists(String userName)
     {
