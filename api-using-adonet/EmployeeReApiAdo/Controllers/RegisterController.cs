@@ -15,15 +15,19 @@ public class RegisterController : ControllerBase {
     }
 
     [HttpPost]
-     public ActionResult<ServiceResponse<string>> SignUp(Employee employee)
-        {
-            ServiceResponse<string> response = new ServiceResponse<string>();
+    public ActionResult<ServiceResponse<string>> SignUp(RegisterAccountDto newEmployee)
+    {
+        ServiceResponse<string> response = new ServiceResponse<string>();
 
-            response = _registerService.SignUp(employee); 
+        response = _registerService.SignUp(newEmployee); 
 
-            return response; 
-            
-        }
+        return response; 
+        
+    }
+
+
+
+
     
     
 

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization; 
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class TicketController: ControllerBase{
@@ -27,6 +29,7 @@ public class TicketController: ControllerBase{
         }
 
     [HttpGet]
+    [Route("getPendingTickets")]
     public ActionResult<ServiceResponse<List<TicketDto>>> getPendingTicket() {
 
             ServiceResponse<List<TicketDto>> response = new ServiceResponse<List<TicketDto>>();

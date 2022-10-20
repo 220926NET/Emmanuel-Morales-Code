@@ -12,15 +12,27 @@ public class LoginController : ControllerBase
         {
             _loginService = loginService; 
         }
-    
+
+
+
         [HttpPost]
-        public ServiceResponse<LoginDto> Post([FromBody] Login loginUser)
+        public ActionResult<ServiceResponse<string>> Post([FromBody] Login loginUser)
         {
             
-            ServiceResponse<LoginDto> response = _loginService.Login(loginUser);
-            return response; 
+            ServiceResponse<string> response = _loginService.Login(loginUser);
+
+            if(response.Success){
+                return Ok(response); 
+            } else 
+            {
+                return Ok(response); 
+            }
+        
          
         }
+
+
+
     // [HttpGet("{id}")]
     // public ServiceResponse<Employee> GetEmployee(int id)
     // {
