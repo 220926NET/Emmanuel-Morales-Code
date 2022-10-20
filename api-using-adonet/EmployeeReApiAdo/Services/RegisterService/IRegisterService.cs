@@ -3,6 +3,5 @@
 
 public interface IRegisterService{
 
- ServiceResponse<string> SignUp(Employee employee);
-
+ ServiceResponse<string> SignUp(RegisterAccountDto newEmployee);
 }
