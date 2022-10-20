@@ -1,0 +1,15 @@
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\bin\Debug\net6.0\SweetSaltyChallenge.exe
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\bin\Debug\net6.0\SweetSaltyChallenge.deps.json
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\bin\Debug\net6.0\SweetSaltyChallenge.runtimeconfig.json
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\bin\Debug\net6.0\SweetSaltyChallenge.dll
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\bin\Debug\net6.0\SweetSaltyChallenge.pdb
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\obj\Debug\net6.0\SweetSaltyChallenge.csproj.AssemblyReference.cache
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\obj\Debug\net6.0\SweetSaltyChallenge.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\obj\Debug\net6.0\SweetSaltyChallenge.AssemblyInfoInputs.cache
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\obj\Debug\net6.0\SweetSaltyChallenge.AssemblyInfo.cs
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\obj\Debug\net6.0\SweetSaltyChallenge.csproj.CoreCompileInputs.cache
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\obj\Debug\net6.0\SweetSaltyChallenge.dll
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\obj\Debug\net6.0\refint\SweetSaltyChallenge.dll
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\obj\Debug\net6.0\SweetSaltyChallenge.pdb
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\obj\Debug\net6.0\SweetSaltyChallenge.genruntimeconfig.cache
+C:\Users\Emman\Revature\Emmanuel-Morales-Code\SweetSaltyChallenge\SweetSaltyChallenge\SweetSaltyChallenge\obj\Debug\net6.0\ref\SweetSaltyChallenge.dll
