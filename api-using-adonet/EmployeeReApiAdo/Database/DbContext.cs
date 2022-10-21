@@ -338,43 +338,48 @@ public class DbContext
     }
 
 
-    // public ServiceResponse<string> AddEmployeePhoto(byte[] photo, int employeeId){
-    //     ServiceResponse<string> addPhotoRes = new ServiceResponse<string>(); 
-    //     try
-    //     {
-    //         _connection.Open();
-    //         SqlCommand cmd = new SqlCommand("exec setEmployeeImage @photo, @EmployeeId;", _connection);
-    //         cmd.Parameters.AddWithValue("@photo", photo);
-    //         cmd.Parameters.AddWithValue("@employeeId", employeeId);
+    public ServiceResponse<string> AddEmployeeDetails(EmployeeDetailsDto employeeDetails){
+        ServiceResponse<string> addPhotoRes = new ServiceResponse<string>(); 
 
-    //         int rowsAffected = cmd.ExecuteNonQuery();
 
-    //         if(rowsAffected == 1){
-    //             addPhotoRes.Success = true; 
-    //             addPhotoRes.Message = "Successfully Added Photo."; 
-    //         } else {
+        try
+        {
+            _connection.Open();
+            SqlCommand cmd = new SqlCommand("exec addEmployeeAddressDetails @EmployeeId, @Address, @State, @ZipCode, @MobileNumber;", _connection);
+            cmd.Parameters.AddWithValue("@EmployeeId", employeeDetails.EmployeeId);
+            cmd.Parameters.AddWithValue("@Address", employeeDetails.Address);
+            cmd.Parameters.AddWithValue("@State", employeeDetails.ZipCode);
+            cmd.Parameters.AddWithValue("@ZipCode", employeeDetails.ZipCode);
+            cmd.Parameters.AddWithValue("@MobileNumber", employeeDetails.MobileNumber);
 
-    //             addPhotoRes.Success = false;
-    //             addPhotoRes.Message = "Unable to add photo, please try again."; 
-    //         }
+            int rowsAffected = cmd.ExecuteNonQuery();
+
+            if(rowsAffected == 1){
+                addPhotoRes.Success = true; 
+                addPhotoRes.Message = "Successfully added employee details"; 
+            } else {
+
+                addPhotoRes.Success = false;
+                addPhotoRes.Message = "Unable to add employee details"; 
+            }
 
             
 
 
-    //     }
-    //     catch (SqlException)
-    //     {
-    //         addPhotoRes.Success = false; 
-    //         addPhotoRes.Message = "Unexpected error please try again later!"; 
-    //         return addPhotoRes; 
+        }
+        catch (SqlException)
+        {
+            addPhotoRes.Success = false; 
+            addPhotoRes.Message = "Unexpected error please try again later!"; 
+            return addPhotoRes; 
             
-    //     }
-    //     finally
-    //     {
-    //         _connection.Close();
-    //     }
-    //     return addPhotoRes; 
-    // }
+        }
+        finally
+        {
+            _connection.Close();
+        }
+        return addPhotoRes; 
+    }
 
     public bool userAlreadyExists(String userName)
     {
