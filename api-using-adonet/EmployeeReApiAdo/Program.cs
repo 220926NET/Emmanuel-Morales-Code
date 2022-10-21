@@ -24,6 +24,7 @@ builder.Services.AddSwaggerGen(configuration => {
 builder.Services.AddScoped<ITicketService, TicketService>(); 
 builder.Services.AddScoped<IRegisterService, RegisterService>(); 
 builder.Services.AddScoped<ILoginService, LoginService>(); 
+builder.Services.AddScoped<IEmployeeService, EmployeeService>(); 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options=> 
