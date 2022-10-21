@@ -2,6 +2,7 @@
 using System.Security.Claims; 
 using Microsoft.IdentityModel.Tokens; 
 using System.IdentityModel.Tokens.Jwt; 
+using System.Text; 
 public class LoginService : ILoginService {
 
     private readonly DbContext _dbContext = new DbContext(); 
@@ -36,7 +37,7 @@ public class LoginService : ILoginService {
             new Claim(ClaimTypes.Name, employeeName)
         }; 
 
-        SymmetricSecurityKey key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("MyTopSecretToken123"));
+        SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MyTopSecretToken123"));
 
         SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature); 
 
