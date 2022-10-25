@@ -1,26 +1,23 @@
 using Models;
 
 /// <summary>
-/// Class <c>Prompts</c> deals with writing messages to the console and retrieving user input.
+/// Class <c>Prompts</c> deals with writing messages to the console and retrieving Employee input.
 /// </summary>
 public class Prompts
 {
-    private InputResponse _inputResponse;
-    private InputValidator _inputvalidator;
 
     private RequestService _RequestService;
 
     public Prompts()
     {
-        _inputvalidator = new InputValidator();
-        _inputResponse = new InputResponse();
+     
         _RequestService = new RequestService();
     }
 
     /// <summary>
     /// <method><c>WelcomePrompt<c></method> 
     /// <para>
-    /// This method displays to the user his options when he first starts the application. 
+    /// This method displays to the Employee his options when he first starts the application. 
     /// </para> 
     /// </summary>
     public int WelcomePrompt()
@@ -30,39 +27,35 @@ public class Prompts
         Console.WriteLine("Enter 2 to register a new acount.");
         Console.WriteLine("Enter 3 to exit\n");
         string? userOptionStr = Console.ReadLine();
-        bool inputIsValid = _inputvalidator.IsValidOptionInput(userOptionStr);
-        if (inputIsValid)
-        {
-            return int.Parse(userOptionStr!); 
-        }
-        else
-        {
-            Message.printErrorMessage("Please choose a valid option.");
-            return -1; 
-        }
+        int userOption = 0;
+        bool isValidOption = int.TryParse(userOptionStr, out userOption); 
 
+        return userOption;
+
+
+        
     }
 
     /// <summary>
     /// <method><c>LoginUserPrompt<c></method> 
     /// <para>
-    /// This method asks the user for his password and login and sends it to <c>RequestService</c>. 
+    /// This method asks the Employee for his password and login and sends it to <c>RequestService</c>. 
     /// </para> 
     /// </summary>
-    public void LoginUserPrompt(out User user)
+    public void LoginUserPrompt(out Employee Employee)
     {
 
 
         Console.WriteLine("Please type your username.");
         string? userName = Console.ReadLine();
 
-        InputResponse isValidPasswordRes = new InputResponse();
+    
         Console.WriteLine("Please type your password.");
         string? password = Console.ReadLine();
         
-        ResponseMessage<User> postLoginResponse = _RequestService.PostLogin(userName, password);
+        ResponseMessage<Employee> postLoginResponse = _RequestService.PostLogin(userName, password);
         Message.printMessage(postLoginResponse.message!);
-        user = postLoginResponse.data!;
+        Employee = postLoginResponse.data!;
 
     }
 
@@ -73,24 +66,24 @@ public class Prompts
     /// This method asks the manager to ethier deny or approve a ticket based on a ticket id. The input is sent to <c>RequestService</c>. 
     /// </para> 
     /// </summary>
-    public void AskManagerApprovalPrompt()
+    public void AskManagerApprovalPrompt(string token)
     {
         Console.WriteLine("Please enter the ticket id.");
         string? ticketIdstr = Console.ReadLine();
         int ticketId = 0;
         bool isValidTicketId = int.TryParse(ticketIdstr, out ticketId);
-        
+
         Console.WriteLine("Please enter approve or deny.");
         string? managerInput = Console.ReadLine();
 
-        ResponseMessage<string> UpdateTicketResponse = _RequestService.UpdateTicket(ticketId, managerInput);
+        ResponseMessage<string> UpdateTicketResponse = _RequestService.UpdateTicket(token, ticketId, managerInput);
         Message.printMessage(UpdateTicketResponse.message!);
     }
 
     /// <summary>
     /// <method><c>CreateUserPrompt<c></method> 
     /// <para>
-    /// This method prompts the user to create a new username by submitting a name, username and password. 
+    /// This method prompts the Employee to create a new username by submitting a name, username and password. 
     /// </para> 
     /// </summary>
     public void CreateUserPrompt()
@@ -114,28 +107,17 @@ public class Prompts
     /// This method displays options to logout, create a ticket and view all existing tickets. 
     /// </para> 
     /// </summary>
-    public int HomePrompt(bool isManager)
+    public int HomePrompt()
     {
         Console.WriteLine("Enter 1 to logout.");
         Console.WriteLine("Enter 2 to create a new ticket");
         Console.WriteLine("Enter 3 to view all your ticket submissions. ");
-        int options = 3; 
-        if (isManager)
-        {
-            Console.WriteLine("Enter 4 to view pending tickets.");
-             options = 4;
-        }
+        Console.WriteLine("Enter 4 to view pending tickets.");
+        
         string? userOption = Console.ReadLine();
-
-        bool isValidInput = _inputvalidator.IsValidOptionInput(userOption, options);
-        bool isValidOption = _inputResponse.success;
-
-        if (isValidInput){
-            return int.Parse(userOption!);
-        } else {
-            Message.printErrorMessage("Please choose a valid option!");
-            return -1; 
-        }
+        int userNum = int.MaxValue; 
+        bool isValidOption = int.TryParse(userOption, out userNum); 
+        return userNum; 
 
     }
 
@@ -144,9 +126,9 @@ public class Prompts
     /// <para>
     /// This method displays options to logout, create a ticket and view all existing tickets. 
     /// </para> 
-    /// <parm name="loggedInUserId">user Id </parm> 
+    /// <parm name="loggedInUserId">Employee Id </parm> 
     /// </summary>
-    public void CreateTicketPrompt(int loggedInUserId)
+    public void CreateTicketPrompt(string token)
     {
 
         ResponseMessage<string> responseMessage = new ResponseMessage<string>();
@@ -154,35 +136,33 @@ public class Prompts
         Console.WriteLine("Please type a description for your ticket.");
         string? description = Console.ReadLine();
 
-        while(!_inputvalidator.isValidTicketDescription(description)){
-            Message.printErrorMessage("Please input a valid description that is less than 50 characters!"); 
-            Console.WriteLine("Please type a description for your ticket.");
-            description = Console.ReadLine();
-        }; 
-
         Console.WriteLine("Please type an Amount.");
         string? amount = Console.ReadLine();
 
-         while(!_inputvalidator.IsValidAmount(amount)){
-            Message.printErrorMessage("Please input a valid Amount!"); 
-            Console.WriteLine("Please type an Amount.");
-             amount = Console.ReadLine();
-        }; 
+        decimal amountValue = 0; 
+        
+        bool isValidDecimal = decimal.TryParse(amount, out amountValue); 
 
-        responseMessage = _RequestService.PostTicket(description!, decimal.Parse(amount!), loggedInUserId);
+        responseMessage = _RequestService.PostTicket(description!, amountValue, token);
 
+        if(!responseMessage.success){
+            Message.printErrorMessage(responseMessage.message!);
+        } else {
+            Message.printMessage(responseMessage.message!); 
+        }
+       
 
     }
     /// <summary>
     /// <method><c>printUserTickets<c></method> 
     /// <para>
-    /// This method displays user tickets. 
+    /// This method displays Employee tickets. 
     /// </para> 
-    /// <parm name="userId">user Id </parm> 
+    /// <parm name="userId">Employee Id </parm> 
     /// </summary>
-    public void printUserTickets(int userId)
+    public void printUserTickets(string token)
     {
-        ResponseMessage<List<Ticket>> getTicketResponse = _RequestService.GetUserTickets(userId);
+        ResponseMessage<List<Ticket>> getTicketResponse = _RequestService.GetUserTickets(token);
 
         
         if (getTicketResponse.success)
@@ -199,12 +179,12 @@ public class Prompts
     /// <summary>
     /// <method><c>printPendingTickets<c></method> 
     /// <para>
-    /// This method displays pending user tickets. 
+    /// This method displays pending Employee tickets. 
     /// </para> 
     /// </summary>
-    public void printPendingTickets()
+    public void printPendingTickets(string token)
     {
-        ResponseMessage<List<Ticket>> pendingTicketsResponse = _RequestService.GetPendingTickets();
+        ResponseMessage<List<Ticket>> pendingTicketsResponse = _RequestService.GetPendingTickets(token);
         if (pendingTicketsResponse.success)
         {
             foreach (Ticket ticket in pendingTicketsResponse.data!)

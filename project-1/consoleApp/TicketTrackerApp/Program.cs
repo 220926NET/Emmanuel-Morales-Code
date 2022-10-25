@@ -2,19 +2,18 @@
 
 
 /// <summary>
-/// Keeps track of a logged in user and navigates a menu based on user inputs
+/// Keeps track of a logged in Employee and navigates a menu based on Employee inputs
 ///</summary>
 
 
 Prompts prompts = new Prompts();
-User? loggedInUser = null;
+Employee? loggedInUser = null;
 bool exit = false;
 
 while ( !exit)
 {
 
     int userOptionInt = prompts.WelcomePrompt();
-
 
     switch (userOptionInt)
     {
@@ -34,41 +33,49 @@ while ( !exit)
 
             exit = true;
             break;
+
+        default:
+            Message.printErrorMessage("Please choose a valid option"); 
+            break;
     }
 
-if (loggedInUser != null) Message.printWelcomeMessage(loggedInUser!.Name!.ToUpper());
+if (loggedInUser != null) Message.printWelcomeMessage(loggedInUser!.UserName!.ToUpper());
 
 while (loggedInUser != null)
 {
 
     {
-        int userOption = prompts.HomePrompt(loggedInUser.IsManager);
+        int userOption = prompts.HomePrompt();
 
         switch (userOption)
         {
 
             case 1:
-                Message.printMessage(loggedInUser.Name!.ToUpper() + " has logged out.");
+                Message.printMessage(loggedInUser.UserName!.ToUpper() + " has logged out.");
                 loggedInUser = null;
                 break;
 
             case 2:
 
-                prompts.CreateTicketPrompt(loggedInUser.Id);
+                prompts.CreateTicketPrompt(loggedInUser.Token);
 
                 break;
 
             case 3:
 
-                prompts.printUserTickets(loggedInUser.Id);
+                prompts.printUserTickets(loggedInUser.Token);
 
                 break;
             case 4:
 
-                prompts.printPendingTickets();
+                prompts.printPendingTickets(loggedInUser.Token);
 
-                prompts.AskManagerApprovalPrompt();
+                prompts.AskManagerApprovalPrompt(loggedInUser.Token);
                 break;
+            default:
+                Message.printErrorMessage("Please choose a valid option"); 
+                break;
+
         }
     }
 }
