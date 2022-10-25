@@ -1,11 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
+
+using System.Security.Claims;
 public interface ITicketService {
 
-     ServiceResponse<string> CreateTicket(Ticket ticket); 
+     ServiceResponse<string> CreateTicket(CreateTicketDto ticketDto,ClaimsIdentity claimsIdentity); 
 
      ServiceResponse<List<TicketDto>> GetPendingTickets(); 
 
-     ServiceResponse<string> UpdateTicket(int ticketId, string newStatus); 
+     ServiceResponse<string> UpdateTicket(UpdateTicketDto createTicketDto); 
 
      ServiceResponse<List<TicketDto>> getTicketsById(int id); 
 

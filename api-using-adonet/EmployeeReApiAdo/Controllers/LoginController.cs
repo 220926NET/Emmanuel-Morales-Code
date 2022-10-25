@@ -13,12 +13,10 @@ public class LoginController : ControllerBase
             _loginService = loginService; 
         }
 
-
-
         [HttpPost]
         public ActionResult<ServiceResponse<string>> Post([FromBody] Login loginUser)
         {
-            
+          
             ServiceResponse<string> response = _loginService.Login(loginUser);
 
             if(response.Success){
