@@ -3,15 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("[controller]")]
-public class RegisterController : ControllerBase {
+public class RegisterController : ControllerBase
+{
 
-    private readonly DbContext _dbContext = new DbContext(); 
-    
-    private IRegisterService _registerService; 
+    private IRegisterService _registerService;
     public RegisterController(IRegisterService registerService)
     {
-        _registerService = registerService; 
-        
+        _registerService = registerService;
+
     }
 
     [HttpPost]
@@ -19,16 +18,21 @@ public class RegisterController : ControllerBase {
     {
         ServiceResponse<string> response = new ServiceResponse<string>();
 
-        response = _registerService.SignUp(newEmployee); 
+        response = _registerService.SignUp(newEmployee);
 
-        return response; 
-        
+        if (response.Success)
+        {
+            response.Message = "Successfully registerd";
+        }
+
+        return response;
+
     }
 
 
 
 
-    
-    
+
+
 
 }

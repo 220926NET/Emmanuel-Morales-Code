@@ -1,75 +1,90 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization; 
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class TicketController: ControllerBase{
-
-    private readonly DbContext _dbContext = new DbContext(); 
-
-    private ITicketService _ticketService; 
-    public TicketController(ITicketService ticketService)
+public class TicketController : ControllerBase
+{
+    private readonly DbContext _dbContext;
+    private ITicketService _ticketService;
+    private IAuthService _authService;
+    public TicketController(ITicketService ticketService, IAuthService authService, DbContext dbContext)
     {
-        _ticketService = ticketService; 
+        _ticketService = ticketService;
+        _authService = authService;
+        _dbContext = dbContext;
     }
+
+
     [HttpPost]
-    public ActionResult<ServiceResponse<string>> createTicket(Ticket ticket)
+    [Route("createTicket")]
+
+    public ActionResult<ServiceResponse<string>> createTicket(CreateTicketDto ticketDto)
+    {
+
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+        ServiceResponse<string> response = new ServiceResponse<string>();
+
+        response = _ticketService.CreateTicket(ticketDto, identity!);
+
+        if (response.Success == false)
         {
-    
-            ServiceResponse<string> response = new ServiceResponse<string>();
-
-            response = _ticketService.CreateTicket(ticket); 
-
-            if(response.Success == false){
-                return BadRequest(response); 
-            }
-
-            return Ok(response); 
+            return BadRequest(response);
         }
+
+        return Ok(response);
+    }
 
     [HttpGet]
     [Route("getPendingTickets")]
-    public ActionResult<ServiceResponse<List<TicketDto>>> getPendingTicket() {
+    public ActionResult<ServiceResponse<List<TicketDto>>> getPendingTicket()
+    {
+        ServiceResponse<List<TicketDto>> response = new ServiceResponse<List<TicketDto>>();
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
 
-            ServiceResponse<List<TicketDto>> response = new ServiceResponse<List<TicketDto>>();
-            
-            response = _ticketService.GetPendingTickets(); 
+        // check that user is a manager
+        if (!_authService.IsManger(identity!))
+        {
+            response.Data = null;
+            response.Success = false;
+            response.Message = "You are not a manager! Your Unable to get pending tickets!";
+            return Unauthorized(response);
+        }
 
-            if(!response.Success){
-                return BadRequest(response); 
-            }
+        response = _ticketService.GetPendingTickets();
 
-            return Ok(response); 
+        if (!response.Success)
+        {
+            return BadRequest(response);
+        }
+
+        return Ok(response);
 
     }
 
-    [HttpPut]
-    public ActionResult<ServiceResponse<string>> updateTicket([FromBody] string newStatus, int ticketId)
-    {
-        ServiceResponse<string> response = _ticketService.UpdateTicket(ticketId, newStatus);
 
-        if(!response.Success){
-            return BadRequest(response); 
+
+
+    [HttpGet("getMyTickets")]
+
+    public ActionResult<ServiceResponse<List<TicketDto>>> getMyTickets()
+    {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+        ServiceResponse<List<TicketDto>> response = _ticketService.getTicketsById(_authService.getEmployeeId(identity!));
+
+        if (!response.Success)
+        {
+
+            return BadRequest(response);
         }
         return Ok(response);
     }
 
-    [HttpGet("{id}")]
-
-        public ActionResult<ServiceResponse<List<TicketDto>>> getTicketsById(int id)
-        {
-
-            ServiceResponse<List<TicketDto>> response = _ticketService.getTicketsById(id);
-
-            if(!response.Success){
-                return BadRequest(response.Message); 
-            }
-            return Ok(response); 
-        }
 
 
-        
 
-    
+
 }

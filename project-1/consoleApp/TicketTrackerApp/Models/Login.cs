@@ -3,8 +3,8 @@ namespace Models;
 
 public class Login
 {
-    public string UserName; 
-    private string _password;
+    public string UserName {get; set;}
+    private string _password {get; set;}
 
     public Login(string userName, string password)
     {

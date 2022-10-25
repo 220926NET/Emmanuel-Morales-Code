@@ -5,36 +5,38 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text; 
 public class LoginService : ILoginService {
 
-    private readonly DbContext _dbContext = new DbContext(); 
+    private readonly DbContext _dbContext; 
+    private readonly InputValidator _inputValidator = new InputValidator(); 
     private readonly IConfiguration _configuration; 
-    public LoginService(IConfiguration configuration)
+    public LoginService(IConfiguration configuration, DbContext dbContext) 
     {
+        _dbContext = dbContext; 
         _configuration = configuration;
     }
     public ServiceResponse<string> Login(Login loginUser){
 
-        ServiceResponse<LoginDto> response = _dbContext.Login(loginUser);
+        
+        ServiceResponse<LoginDto> insertToDbRes = _dbContext.Login(loginUser);
+        ServiceResponse<string> createTokenRes = new ServiceResponse<string>();
 
-        ServiceResponse<string> res = new ServiceResponse<string>();
-
-        if(response.Success){
+        if(insertToDbRes.Success){
             // add token to response 
-            res.Data = CreateToken(response.Data!.Id.ToString(), response.Data.Name); 
-            res.Message = "success token created!"; 
-            res.Success = true; 
+            createTokenRes.Data = CreateToken(insertToDbRes.Data!.Id.ToString(), insertToDbRes.Data.UserName); 
+            createTokenRes.Message = "success token created!"; 
+            createTokenRes.Success = true; 
         } else {
-            res.Message = "Unable to log you in" ;
-            res.Success = false; 
+            createTokenRes.Message = "That account does not exist." ;
+            createTokenRes.Success = false; 
         }
 
-        return res; 
+        return createTokenRes; 
     }
 
 
-    private string CreateToken(string id, string employeeName){
+    private string CreateToken(string id, string userName){
         List<Claim> claims = new List<Claim>{
-            new Claim(ClaimTypes.NameIdentifier, id),
-            new Claim(ClaimTypes.Name, employeeName)
+            new Claim(ClaimTypes.Sid, id),
+            new Claim(ClaimTypes.Name, userName)
         }; 
 
         SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MyTopSecretToken123"));

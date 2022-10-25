@@ -2,21 +2,21 @@ using Models;
 
 
 /// <summary>
-/// Class <c>RequestService</c> deals with validating user input and sending information to a client for persistence.
+/// Class <c>RequestService</c> deals with validating Employee input and sending information to a client for persistence.
 /// </summary>
 class RequestService{
 
-    private IRequest _client;
-    private InputValidator _inputvalidator;
+    private ApiClient _client = new ApiClient();
+   
     public RequestService()
     {
-        _client = ConnectionFactory.getSqlConnection();
-        _inputvalidator = new InputValidator();
+
+   
     }
     /// <summary>
     /// <method><c>PostCreateUser<c></method> 
     /// <para>
-    /// This method validates user data and sends it to a client. 
+    /// This method validates Employee data and sends it to a client. 
     /// </para> 
     ///<returns>
     /// A <c>ResponseMessage</c> object containing a success flag, message string and requested data
@@ -27,25 +27,14 @@ class RequestService{
 
         ResponseMessage<string> responseMessage = new ResponseMessage<string>();
 
-        bool isValidName = _inputvalidator.isValidName(name);
-        bool isValidUserName = _inputvalidator.isValidName(userName);
-        bool isValidPass = _inputvalidator.IsValidPassword(password);
-
-        if (isValidName && isValidUserName && isValidPass)
-        {
-            User user = new User()
-            {
-                Name = name, 
-                login = new Login(userName!, password!)
-                   
-            };
-            responseMessage = _client.PostCreateUser(user);
-        }
-        else
-        {
-            responseMessage.success = false;
-            responseMessage.message = "Password must be less than 16 characters but greater than 7 characters and contain one number!";
-        }
+        
+            PostNewEmployee employee = new PostNewEmployee{
+                Name = name!, 
+                UserName = userName!,
+                Password = password!
+            }; 
+            responseMessage = _client.PostCreateUser(employee);
+        
 
 
         return responseMessage;
@@ -60,46 +49,18 @@ class RequestService{
     /// </returns> 
     /// </summary>
 
-    public ResponseMessage<User> PostLogin(string? username, string? password)
+    public ResponseMessage<Employee> PostLogin(string? username, string? password)
     {
 
-        ResponseMessage<User> postLoginResponse = new ResponseMessage<User>();
+        
+        ResponseMessage<Employee> postLoginResponse = new ResponseMessage<Employee>();
 
-        bool isValidUserName = _inputvalidator.isValidName(username);
-        bool isValidPassword = _inputvalidator.IsValidPassword(password);
-
-        if (isValidUserName && isValidPassword)
-        {
-            Login loginCredentials = new Login(username!, password!);
+       
+        Login loginCredentials = new Login(username!, password!);
             
 
-            postLoginResponse = _client.PostLogin(loginCredentials);
+        postLoginResponse = _client.PostLogin(loginCredentials);
 
-            if (postLoginResponse.success)
-            {
-                User user = new User
-                {
-                    Id = postLoginResponse.data!.Id,
-                    Name = postLoginResponse.data.Name!,
-                    IsManager = postLoginResponse.data.IsManager
-                };
-            }
-            else
-            {
-                postLoginResponse.data = null;
-                postLoginResponse.message = "Sorry unable to log you in, please ensure your username and password are correct!"; 
-                postLoginResponse.success = false;
-
-            }
-
-        }
-        else
-        {
-            postLoginResponse.message = "Please ensure your password and username are valid.";
-            postLoginResponse.data = null;
-            return postLoginResponse;
-
-        }
 
         return postLoginResponse;
     }
@@ -107,16 +68,16 @@ class RequestService{
     /// <summary>
     /// <method><c>GetUserTickets<c></method> 
     /// <para>
-    /// This method retrieves user Tickets based on their id. 
+    /// This method retrieves Employee Tickets based on their id. 
     /// </para> 
     ///<returns>
     /// A <c>ResponseMessage</c> object containing a success flag, message string and requested data
     /// </returns> 
     /// </summary>
-    public ResponseMessage<List<Ticket>> GetUserTickets(int id)
+    public ResponseMessage<List<Ticket>> GetUserTickets(string token) 
     {
 
-        ResponseMessage<List<Ticket>> response = _client.GetUserTickets(id);
+        ResponseMessage<List<Ticket>> response = _client.GetUserTickets(token);
         return response;
     }
 
@@ -124,16 +85,16 @@ class RequestService{
     /// <summary>
     /// <method><c>PostTicket<c></method> 
     /// <para>
-    /// This method creates new user Tickets using their userId. 
+    /// This method creates new Employee Tickets using their userId. 
     /// </para> 
     /// </summary>
-    public ResponseMessage<string> PostTicket(string description, decimal amount, int userId)
+    public ResponseMessage<string> PostTicket(string description, decimal amount, string token)
     {
-        InputValidator inputValidator = new InputValidator();
+       
         ResponseMessage<string> responseMessage = new ResponseMessage<string>();
         
-        Ticket newTicket = new Ticket(description, amount, userId);
-        responseMessage = _client.PostTicket(newTicket);
+        Ticket newTicket = new Ticket(description, amount);
+        responseMessage = _client.PostTicket(newTicket, token);
         return responseMessage;
     }
 
@@ -147,10 +108,10 @@ class RequestService{
     /// A <c>ResponseMessage</c> object containing a success flag, message string and requested data
     /// </returns> 
     /// </summary>
-    public ResponseMessage<List<Ticket>> GetPendingTickets()
+    public ResponseMessage<List<Ticket>> GetPendingTickets(string token)
     {
 
-        ResponseMessage<List<Ticket>> responseMessage = _client.GetPendingTickets();
+        ResponseMessage<List<Ticket>> responseMessage = _client.GetPendingTickets(token);
         return responseMessage;
     }
 
@@ -163,24 +124,11 @@ class RequestService{
     /// A <c>ResponseMessage</c> object containing a success flag, message string and requested data
     /// </returns> 
     /// </summary>
-    public ResponseMessage<string> UpdateTicket(int? id, string? newStatus)
+    public ResponseMessage<string> UpdateTicket(string token,int ticketId,  string? newStatus)
     {
         ResponseMessage<string> responseMessage = new ResponseMessage<string>();
-
-        bool isValidManagerChocie = _inputvalidator.IsValidManagerChoice(id, newStatus);
-
-        if (isValidManagerChocie)
-        {
-
-            responseMessage = _client.UpdateTicket(id, newStatus);
-            return responseMessage;
-        }
-        else
-        {
-            responseMessage.message = "Please ensure that you input your response correctly!";
-            responseMessage.success = false;
-        }
-
+        responseMessage = _client.UpdateTicket(token,ticketId, newStatus);
         return responseMessage;
+       
     }
 }
