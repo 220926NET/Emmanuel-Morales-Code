@@ -5,7 +5,7 @@ name: .NET
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" , "add-azure-blob-storage" ]
 
 
 jobs:
@@ -22,6 +22,8 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: |
+        cd api-using-adonet/EmployeeReApiAdo
+        dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
